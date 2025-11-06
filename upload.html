@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>🚀 لوحة تحكم MatrixMuf</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-database-compat.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --primary-color: #4CAF50; /* أخضر MatrixMuf */
+      --primary-light: #80e27e;
+      --primary-dark: #087f23;
+      --secondary-color: #FFFFFF;
+      --text-color: #333333;
+      --text-light: #666666;
+      --background-light: #f8f9fa;
+      --background-dark: #121212;
+      --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      --hover-green: #388E3C;
+      --font-family-cairo: 'Cairo', sans-serif;
+      --transition: all 0.3s ease;
+      --border-radius: 12px;
+      --card-gradient: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%);
+    }
+
+    body.dark-mode {
+      --text-color: #e0e0e0;
+      --text-light: #b0b0b0;
+      --background-light: var(--background-dark);
+      --card-shadow: 0 4px 15px rgba(0, 255, 0, 0.15);
+      background-color: var(--background-dark);
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body { 
+      background: var(--background-light); 
+      color: var(--text-color); 
+      font-family: var(--font-family-cairo); 
+      text-align: center; 
+      padding: 10px; 
+      display: flex; 
+      flex-direction: column; 
+      align-items: center; 
+      min-height: 100vh; 
+      transition: background-color 0.3s, color 0.3s;
+    }
+    
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 5%;
+      background-color: var(--secondary-color);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      transition: var(--transition);
+      width: 100%;
+      margin-bottom: 20px;
+    }
+
+    .dark-mode .navbar {
+      background-color: #1a1a1a;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    .logo {
+      font-size: 26px;
+      font-weight: 800;
+      color: var(--primary-color);
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: var(--transition);
+      text-decoration: none;
+    }
+
+    .logo:hover {
+      transform: scale(1.03);
+    }
+
+    .logo i {
+      font-size: 28px;
+    }
+
+    .nav-icons {
+      list-style: none;
+      display: flex;
+      gap: 20px;
+    }
+
+    .nav-icons a {
+      color: var(--text-color);
+      font-size: 18px;
+      transition: var(--transition);
+      display: block;
+      position: relative;
+      padding: 8px;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .nav-icons a:hover {
+      color: var(--primary-color);
+      background-color: rgba(76, 175, 80, 0.1);
+      transform: translateY(-2px);
+    }
+    
+    .container { 
+      background: var(--secondary-color); 
+      border-radius: var(--border-radius); 
+      padding: 25px; 
+      width: 100%; 
+      max-width: 500px; 
+      box-shadow: var(--card-shadow); 
+      border: 1px solid rgba(76, 175, 80, 0.1); 
+      margin: 20px 0;
+      transition: var(--transition);
+    }
+    
+    .dark-mode .container {
+      background-color: #1e1e1e;
+      border: 1px solid rgba(76, 175, 80, 0.15);
+    }
+    
+    h1 { 
+      font-size: 1.8rem; 
+      margin-bottom: 20px; 
+      color: var(--primary-color);
+      font-weight: 700; 
+      position: relative;
+      display: inline-block;
+    }
+
+    h1::after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      right: 0;
+      width: 50%;
+      height: 3px;
+      background: linear-gradient(to right, var(--primary-color), transparent);
+      border-radius: 2px;
+    }
+    
+    .input-group { 
+      position: relative; 
+      margin-bottom: 20px; 
+    }
+    
+    .input-group i { 
+      position: absolute; 
+      right: 15px; 
+      top: 50%; 
+      transform: translateY(-50%); 
+      color: var(--text-light); 
+      font-size: 1em; 
+    }
+    
+    input[type="text"] { 
+      width: 100%; 
+      padding: 14px 45px 14px 15px; 
+      background: var(--background-light); 
+      border: 2px solid var(--primary-color); 
+      border-radius: var(--border-radius); 
+      color: var(--text-color); 
+      font-size: 0.95rem; 
+      transition: var(--transition); 
+      font-family: var(--font-family-cairo);
+    }
+    
+    .dark-mode input[type="text"] {
+      background-color: #2a2a2a;
+      color: #e0e0e0;
+    }
+    
+    input[type="text"]:focus { 
+      outline: none; 
+      border-color: var(--primary-dark); 
+      box-shadow: 0 0 12px rgba(76, 175, 80, 0.3); 
+    }
+    
+    .file-upload-wrapper { 
+      margin-bottom: 20px; 
+    }
+    
+    .file-label { 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      padding: 14px; 
+      background: var(--background-light); 
+      border: 2px dashed rgba(76, 175, 80, 0.3); 
+      border-radius: var(--border-radius); 
+      cursor: pointer; 
+      color: var(--text-light); 
+      transition: var(--transition); 
+      font-weight: 500;
+    }
+    
+    .dark-mode .file-label {
+      background-color: #2a2a2a;
+    }
+    
+    .file-label:hover { 
+      background: rgba(76, 175, 80, 0.1); 
+      border-color: var(--primary-color); 
+      color: var(--primary-color); 
+    }
+    
+    .file-label i { 
+      margin-left: 8px; 
+    }
+    
+    input[type="file"] { 
+      display: none; 
+    }
+    
+    .file-name { 
+      margin-top: 8px; 
+      font-size: 0.85em; 
+      color: var(--text-light); 
+      overflow-wrap: break-word; 
+    }
+    
+    button { 
+      width: 100%; 
+      padding: 14px; 
+      margin-top: 10px; 
+      border: none; 
+      border-radius: var(--border-radius); 
+      font-size: 1rem; 
+      font-weight: bold; 
+      background: var(--card-gradient); 
+      color: #fff; 
+      cursor: pointer; 
+      transition: var(--transition); 
+      font-family: var(--font-family-cairo);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    
+    button:hover { 
+      transform: translateY(-3px); 
+      box-shadow: 0 6px 15px rgba(76, 175, 80, 0.3); 
+    }
+    
+    #status { 
+      margin-top: 20px; 
+      padding: 15px; 
+      border-radius: var(--border-radius); 
+      background: var(--background-light); 
+      font-size: 0.95rem; 
+      border: 1px solid rgba(76, 175, 80, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    
+    .dark-mode #status {
+      background-color: #2a2a2a;
+    }
+    
+    .loading { 
+      color: #f39c12; 
+    }
+    
+    .success { 
+      color: var(--primary-color); 
+    }
+    
+    .error { 
+      color: #e74c3c; 
+    }
+    
+    .progress-bar-container { 
+      width: 100%; 
+      background: #e0e0e0; 
+      border-radius: 8px; 
+      height: 8px; 
+      margin-top: 10px; 
+      overflow: hidden; 
+      display: none; 
+    }
+    
+    .dark-mode .progress-bar-container {
+      background: #2a2a2a;
+    }
+    
+    .progress-bar { 
+      height: 100%; 
+      width: 0; 
+      background: var(--card-gradient); 
+      transition: width 0.3s ease; 
+    }
+    
+    .back-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 20px;
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: var(--border-radius);
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 600;
+      transition: var(--transition);
+      margin-bottom: 25px;
+      box-shadow: 0 4px 10px rgba(76, 175, 80, 0.2);
+      text-decoration: none;
+    }
+
+    .back-button:hover {
+      background-color: var(--hover-green);
+      transform: translateY(-3px);
+      box-shadow: 0 6px 15px rgba(76, 175, 80, 0.3);
+    }
+    
+    /* تحسينات للهواتف */
+    @media (max-width: 768px) {
+      .navbar {
+        padding: 10px 4%;
+      }
+      
+      .logo {
+        font-size: 24px;
+      }
+      
+      .logo i {
+        font-size: 26px;
+      }
+      
+      .nav-icons {
+        gap: 15px;
+      }
+      
+      .nav-icons a {
+        font-size: 17px;
+        width: 38px;
+        height: 38px;
+      }
+      
+      .container {
+        padding: 20px;
+        border-radius: 12px;
+      }
+      
+      h1 {
+        font-size: 1.5rem;
+      }
+      
+      input[type="text"] {
+        padding: 12px 40px 12px 12px;
+      }
+      
+      button {
+        padding: 12px;
+      }
+      
+      .back-button {
+        padding: 10px 16px;
+        font-size: 14px;
+        margin-bottom: 20px;
+      }
+    }
+    
+    /* تحسينات للآيباد والأجهزة المتوسطة */
+    @media (min-width: 769px) and (max-width: 1024px) {
+      .container {
+        max-width: 600px;
+        padding: 30px;
+      }
+      
+      h1 {
+        font-size: 2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="navbar">
+    <a href="index.html" class="logo">
+      <i class="fas fa-cube"></i>
+      MatrixMuf
+    </a>
+    <nav>
+      <ul class="nav-icons">
+        <li><a href="profile.html" title="بروفايل"><i class="fas fa-user"></i></a></li>
+        <li><a href="#" id="dark-mode-toggle" title="وضع داكن"><i class="fas fa-moon"></i></a></li>
+        <li><a href="support.html" title="دعم فني"><i class="fas fa-headset"></i></a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <a href="index.html" class="back-button">
+    <i class="fas fa-arrow-right"></i>
+    <span>العودة للواجهة الرئيسية</span>
+  </a>
+
+  <div class="container">
+    <h1>🚀 لوحة تحكم MatrixMuf</h1>
+    <div class="input-group">
+      <input type="text" id="modName" placeholder="اسم المود">
+      <i class="fas fa-file-signature"></i>
+    </div>
+    <div class="input-group">
+      <input type="text" id="modVersion" placeholder="إصدار المود">
+      <i class="fas fa-box-open"></i>
+    </div>
+    <div class="input-group">
+      <input type="text" id="modNumber" placeholder="رقم المود (اختياري)">
+      <i class="fas fa-hashtag"></i>
+    </div>
+    <div class="input-group">
+      <select id="modCategory" style="width: 100%; padding: 14px; border-radius: var(--border-radius); border: 2px solid var(--primary-color); background: var(--background-light); color: var(--text-color); font-family: var(--font-family-cairo);">
+        <option value="mods">مودات</option>
+        <option value="resourcePacks">ريسورس باك</option>
+      </select>
+      <i class="fas fa-tags"></i>
+    </div>
+    <div class="file-upload-wrapper">
+      <label for="modImage" class="file-label">
+        <i class="fas fa-image"></i>
+        <span>اختر صورة المود</span>
+      </label>
+      <input type="file" id="modImage" accept="image/*">
+      <div id="image-name" class="file-name"></div>
+    </div>
+    <div class="file-upload-wrapper">
+      <label for="modFile" class="file-label">
+        <i class="fas fa-cloud-upload-alt"></i>
+        <span>اختر ملف المود</span>
+      </label>
+      <input type="file" id="modFile">
+      <div id="file-name" class="file-name"></div>
+    </div>
+    <button onclick="uploadMod()">
+      <i class="fas fa-upload"></i>
+      <span>✅ رفع المود</span>
+    </button>
+
+    <div id="status">
+      <i class="fas fa-info-circle"></i>
+      <span>أدخل المعلومات واضغط زر الرفع</span>
+    </div>
+    <div id="progress-container" class="progress-bar-container">
+      <div id="progress-bar" class="progress-bar"></div>
+    </div>
+  </div>
+
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyDgqgIdXgZflmPT4z3IcaIzg6f7BxLEvyE",
+    authDomain: "matrixmodadd.firebaseapp.com",
+    databaseURL: "https://matrixmodadd-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "matrixmodadd",
+    storageBucket: "matrixmodadd.firebasestorage.app",
+    messagingSenderId: "67540662652",
+    appId: "1:67540662652:web:0c597e33134bccf89accf9"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.database();
+
+  // إعداد وضع الظلام
+  const darkModeToggle = document.getElementById('dark-mode-toggle');
+  const body = document.body;
+
+  const currentTheme = localStorage.getItem('theme');
+  if (currentTheme === 'dark') {
+    body.classList.add('dark-mode');
+    darkModeToggle.querySelector('i').classList.replace('fa-moon', 'fa-sun');
+  }
+
+  darkModeToggle.addEventListener('click', (e) => {
+    e.preventDefault();
+    body.classList.toggle('dark-mode');
+
+    const icon = darkModeToggle.querySelector('i');
+    if (body.classList.contains('dark-mode')) {
+      icon.classList.replace('fa-moon', 'fa-sun');
+      localStorage.setItem('theme', 'dark');
+    } else {
+      icon.classList.replace('fa-sun', 'fa-moon');
+      localStorage.setItem('theme', 'light');
+    }
+  });
+
+  document.getElementById('modImage').addEventListener('change', function() {
+    document.getElementById('image-name').textContent = this.files[0] ? this.files[0].name : '';
+  });
+
+  document.getElementById('modFile').addEventListener('change', function() {
+    document.getElementById('file-name').textContent = this.files[0] ? this.files[0].name : '';
+  });
+
+  async function uploadMod() {
+    const name = document.getElementById('modName').value.trim();
+    const version = document.getElementById('modVersion').value.trim();
+    const number = document.getElementById('modNumber').value.trim();
+    const category = document.getElementById('modCategory').value;
+    const image = document.getElementById('modImage').files[0];
+    const file = document.getElementById('modFile').files[0];
+    const statusElement = document.getElementById('status');
+    const progressBarContainer = document.getElementById('progress-container');
+    const progressBar = document.getElementById('progress-bar');
+
+    if (!name || !version || !image || !file) {
+      statusElement.innerHTML = "<span class='error'><i class='fas fa-exclamation-circle'></i> جميع الحقول مطلوبة.</span>";
+      progressBarContainer.style.display = 'none';
+      return;
+    }
+
+    statusElement.innerHTML = "<span class='loading'><i class='fas fa-spinner fa-spin'></i> جاري الرفع...</span>";
+    progressBarContainer.style.display = 'block';
+    progressBar.style.width = '0%';
+
+    const token = "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";
+    const totalSize = image.size + file.size;
+    let uploadedSize = 0;
+
+    function updateProgress(bytes) {
+      uploadedSize += bytes;
+      const percentage = (uploadedSize / totalSize) * 100;
+      progressBar.style.width = `${percentage}%`;
+    }
+
+    try {
+      const imageUrl = await uploadToGitHub(image, "mod", "images/", token, (bytes) => updateProgress(bytes));
+      const fileUrl = await uploadToGitHub(file, "mod", "mods/", token, (bytes) => updateProgress(bytes));
+
+      // ✅ رفع مباشر بدون موافقة
+      const newModRef = db.ref("mods").push();
+      await newModRef.set({
+        name: name,
+        version: version,
+        number: number ? parseInt(number) : null,
+        category: category,
+        image: imageUrl,
+        link: fileUrl,
+        timestamp: Date.now()
+      });
+
+      statusElement.innerHTML = "<span class='success'><i class='fas fa-check-circle'></i> تم رفع المود بنجاح!</span>";
+      progressBar.style.width = '100%';
+      
+      // إعادة تعيين النموذج بعد الرفع الناجح
+      setTimeout(() => {
+        document.getElementById('modName').value = '';
+        document.getElementById('modVersion').value = '';
+        document.getElementById('modNumber').value = '';
+        document.getElementById('modImage').value = '';
+        document.getElementById('modFile').value = '';
+        document.getElementById('image-name').textContent = '';
+        document.getElementById('file-name').textContent = '';
+        statusElement.innerHTML = "<i class='fas fa-info-circle'></i><span>أدخل المعلومات واضغط زر الرفع</span>";
+        progressBarContainer.style.display = 'none';
+      }, 3000);
+      
+    } catch (err) {
+      console.error(err);
+      statusElement.innerHTML = `<span class='error'><i class='fas fa-times-circle'></i> خطأ: ${err.message}</span>`;
+      progressBarContainer.style.display = 'none';
+    }
+  }
+
+  async function uploadToGitHub(file, repo, folder, token, onProgress) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = async () => {
+        const content = reader.result.split(',')[1];
+        const path = `${folder}${Date.now()}-${file.name}`;
+        const apiUrl = `https://api.github.com/repos/ii7modysmp-hue/${repo}/contents/${path}`;
+
+        const res = await fetch(apiUrl, {
+          method: 'PUT',
+          headers: {
+            'Authorization': `token ${token}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            message: `Upload ${file.name}`,
+            content: content
+          })
+        });
+
+        if (res.ok) {
+          onProgress(file.size);
+          resolve(`https://raw.githubusercontent.com/ii7modysmp-hue/${repo}/main/${path}`);
+        } else {
+          const err = await res.json();
+          reject(new Error(err.message));
+        }
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+</script>
+</body>
+</html>

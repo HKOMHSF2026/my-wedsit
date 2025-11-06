@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>مودات MatrixMuf</title>
+  
+  <!-- خطوط عربية محسنة -->
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+  <style>
+    :root {
+      --primary-color: #4CAF50;
+      --primary-light: #80e27e;
+      --primary-dark: #087f23;
+      --secondary-color: #FFFFFF;
+      --text-color: #333333;
+      --text-light: #666666;
+      --background-light: #f8f9fa;
+      --background-dark: #121212;
+      --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      --hover-green: #388E3C;
+      --font-family-cairo: 'Cairo', sans-serif;
+      --transition: all 0.3s ease;
+      --border-radius: 12px;
+      --card-gradient: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%);
+    }
+
+    body.dark-mode {
+      --text-color: #e0e0e0;
+      --text-light: #b0b0b0;
+      --background-light: var(--background-dark);
+      --card-shadow: 0 4px 15px rgba(0, 255, 0, 0.15);
+      background-color: var(--background-dark);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-family-cairo);
+      background-color: var(--background-light);
+      color: var(--text-color);
+      direction: rtl;
+      text-align: right;
+      transition: background-color 0.3s, color 0.3s;
+      overflow-x: hidden;
+      position: relative;
+      line-height: 1.6;
+    }
+
+    .animated-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      opacity: 0.03;
+      background: 
+          linear-gradient(45deg, var(--primary-color) 25%, transparent 25%), 
+          linear-gradient(-45deg, var(--primary-color) 25%, transparent 25%), 
+          linear-gradient(45deg, transparent 75%, var(--primary-color) 75%), 
+          linear-gradient(-45deg, transparent 75%, var(--primary-color) 75%);
+      background-size: 20px 20px;
+      background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+      animation: moveBg 25s linear infinite;
+    }
+
+    @keyframes moveBg {
+      0% { background-position: 0 0, 0 10px, 10px -10px, -10px 0px; }
+      100% { background-position: 40px 40px, 40px 50px, 50px 30px, 30px 40px; }
+    }
+
+    .dark-mode .animated-bg {
+      opacity: 0.02;
+    }
+
+    a {
+      text-decoration: none;
+      color: var(--primary-color);
+      transition: var(--transition);
+    }
+
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 5%;
+      background-color: var(--secondary-color);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      transition: var(--transition);
+    }
+
+    .dark-mode .navbar {
+      background-color: #1a1a1a;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    .logo {
+      font-size: 26px;
+      font-weight: 800;
+      color: var(--primary-color);
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: var(--transition);
+    }
+
+    .logo:hover {
+      transform: scale(1.03);
+    }
+
+    .logo i {
+      font-size: 28px;
+    }
+
+    .nav-icons {
+      list-style: none;
+      display: flex;
+      gap: 20px;
+    }
+
+    .nav-icons a {
+      color: var(--text-color);
+      font-size: 18px;
+      transition: var(--transition);
+      display: block;
+      position: relative;
+      padding: 8px;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .nav-icons a:hover {
+      color: var(--primary-color);
+      background-color: rgba(76, 175, 80, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .nav-icons a::after {
+      content: attr(title);
+      position: absolute;
+      bottom: -35px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: var(--primary-color);
+      color: white;
+      padding: 5px 10px;
+      border-radius: 4px;
+      font-size: 12px;
+      opacity: 0;
+      transition: var(--transition);
+      pointer-events: none;
+      white-space: nowrap;
+    }
+
+    .nav-icons a:hover::after {
+      opacity: 1;
+      bottom: -40px;
+    }
+
+    .main-content {
+      padding: 40px 5%;
+      text-align: center;
+      position: relative;
+    }
+
+    .main-content h1 {
+      font-size: 40px;
+      margin-bottom: 12px;
+      color: var(--primary-color);
+      font-weight: 800;
+      position: relative;
+      display: inline-block;
+    }
+
+    .main-content h1::after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      right: 0;
+      width: 50%;
+      height: 3px;
+      background: linear-gradient(to right, var(--primary-color), transparent);
+      border-radius: 2px;
+    }
+
+    .slogan {
+      font-size: 18px;
+      margin-bottom: 40px;
+      color: var(--text-light);
+      font-weight: 500;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* زر الرجوع */
+    .back-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 20px;
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: var(--border-radius);
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 600;
+      transition: var(--transition);
+      margin-bottom: 25px;
+      box-shadow: 0 4px 10px rgba(76, 175, 80, 0.2);
+    }
+
+    .back-button:hover {
+      background-color: var(--hover-green);
+      transform: translateY(-3px);
+      box-shadow: 0 6px 15px rgba(76, 175, 80, 0.3);
+    }
+
+    /* تصميم البحث */
+    .search-section {
+      padding: 20px;
+      background-color: var(--secondary-color);
+      border-radius: var(--border-radius);
+      box-shadow: var(--card-shadow);
+      margin: 25px auto;
+      max-width: 650px;
+      transition: var(--transition);
+      border: 1px solid rgba(76, 175, 80, 0.1);
+    }
+
+    .dark-mode .search-section {
+      background-color: #1e1e1e;
+      border: 1px solid rgba(76, 175, 80, 0.15);
+    }
+
+    .search-container {
+      display: flex;
+      gap: 12px;
+      max-width: 550px;
+      margin: 0 auto;
+    }
+
+    .search-container input {
+      flex: 1;
+      padding: 14px 18px;
+      border: 2px solid var(--primary-color);
+      border-radius: var(--border-radius);
+      background-color: var(--background-light);
+      color: var(--text-color);
+      font-size: 16px;
+      outline: none;
+      transition: var(--transition);
+      font-family: var(--font-family-cairo);
+    }
+
+    .dark-mode .search-container input {
+      background-color: #2a2a2a;
+      color: #e0e0e0;
+    }
+
+    .search-container input::placeholder {
+      color: var(--text-light);
+      opacity: 0.9;
+    }
+
+    .search-container input:focus {
+      border-color: var(--primary-dark);
+      box-shadow: 0 0 12px rgba(76, 175, 80, 0.3);
+    }
+
+    .search-container button {
+      padding: 14px 25px;
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: var(--border-radius);
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-family: var(--font-family-cairo);
+    }
+
+    .search-container button:hover {
+      background-color: var(--hover-green);
+      transform: translateY(-3px);
+      box-shadow: 0 6px 15px rgba(76, 175, 80, 0.3);
+    }
+
+    /* تصميم التبويبات */
+    .tabs-nav {
+      padding: 18px 25px;
+      margin: 25px auto 30px auto;
+      max-width: 500px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 15px;
+      border-radius: var(--border-radius);
+      background-color: var(--secondary-color);
+      box-shadow: var(--card-shadow);
+      transition: var(--transition);
+      border: 1px solid rgba(76, 175, 80, 0.1);
+    }
+
+    .dark-mode .tabs-nav {
+      background-color: #1e1e1e;
+      border: 1px solid rgba(76, 175, 80, 0.15);
+    }
+
+    .tabs-nav button {
+      flex: 1;
+      min-width: 150px;
+      padding: 14px 18px;
+      background-color: var(--background-light);
+      color: var(--text-color);
+      border: 2px solid var(--primary-color);
+      border-radius: var(--border-radius);
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 700;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      text-decoration: none;
+      font-family: var(--font-family-cairo);
+    }
+
+    .dark-mode .tabs-nav button {
+      background-color: #2a2a2a;
+      color: #e0e0e0;
+    }
+
+    .tabs-nav button:hover,
+    .tabs-nav button.active {
+      background-color: var(--primary-color);
+      color: white;
+      transform: translateY(-4px);
+      box-shadow: 0 8px 18px rgba(76, 175, 80, 0.3);
+    }
+
+    /* تصميم بطاقات المودات - محسن */
+    .mods-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 25px;
+      padding: 25px 0;
+      justify-content: center;
+      margin: 0 auto;
+      max-width: 1200px;
+    }
+
+    .mod-card {
+      position: relative;
+      background-color: var(--secondary-color);
+      padding: 0;
+      border-radius: var(--border-radius);
+      cursor: pointer;
+      transition: var(--transition);
+      box-shadow: var(--card-shadow);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border: 1px solid rgba(76, 175, 80, 0.1);
+      height: 100%;
+    }
+
+    .dark-mode .mod-card {
+      background-color: #1e1e1e;
+      border: 1px solid rgba(76, 175, 80, 0.15);
+    }
+
+    .mod-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 100%;
+      height: 4px;
+      background: var(--card-gradient);
+      transform: translateX(100%);
+      transition: transform 0.4s ease;
+    }
+
+    .mod-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 20px rgba(76, 175, 80, 0.2);
+    }
+
+    .mod-card:hover::before {
+      transform: translateX(0);
+    }
+
+    .mod-number {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      background: var(--card-gradient);
+      color: white;
+      font-size: 14px;
+      font-weight: 900;
+      padding: 5px 10px;
+      border-radius: var(--border-radius);
+      z-index: 10;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .image-wrapper {
+      width: 100%;
+      height: 180px;
+      overflow: hidden;
+      margin-bottom: 0;
+      border-radius: var(--border-radius) var(--border-radius) 0 0;
+      border: none;
+      background-color: var(--background-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .dark-mode .image-wrapper {
+      background-color: #2a2a2a;
+    }
+
+    .mod-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+
+    .mod-card:hover .mod-image {
+      transform: scale(1.1);
+    }
+
+    .mod-content {
+      padding: 20px;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .mod-details {
+      text-align: right;
+      margin-bottom: 12px;
+    }
+
+    .mod-name {
+      font-size: 20px;
+      color: var(--primary-color);
+      font-weight: 700;
+      margin-bottom: 8px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      direction: rtl;
+    }
+
+    .mod-version {
+      font-size: 15px;
+      color: var(--text-light);
+      margin-bottom: 12px;
+      direction: rtl;
+    }
+
+    .download-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      padding: 12px;
+      background: var(--card-gradient);
+      color: white;
+      border: none;
+      border-radius: var(--border-radius);
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+      text-decoration: none;
+      transition: var(--transition);
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .download-btn:hover {
+      background: var(--hover-green);
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
+    }
+
+    .no-mods-message, .error-message {
+      font-size: 20px;
+      color: var(--text-light);
+      margin-top: 40px;
+      padding: 20px;
+      background-color: var(--secondary-color);
+      border-radius: var(--border-radius);
+      border: 2px solid rgba(76, 175, 80, 0.3);
+      max-width: 600px;
+      margin: 40px auto;
+      box-shadow: var(--card-shadow);
+    }
+
+    .dark-mode .no-mods-message, .dark-mode .error-message {
+      background-color: #1e1e1e;
+    }
+
+    .error-message {
+      color: #ff5252;
+      border-color: #ff5252;
+    }
+
+    .loader-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      opacity: 1;
+      visibility: visible;
+      transition: opacity 0.4s ease, visibility 0.4s ease;
+    }
+
+    .loader-overlay.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .loader {
+      border: 10px solid rgba(243, 243, 243, 0.2);
+      border-top: 10px solid var(--primary-color);
+      border-radius: 50%;
+      width: 70px;
+      height: 70px;
+      animation: spin 1s linear infinite;
+      box-shadow: 0 0 20px rgba(76, 175, 80, 0.8);
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .footer {
+      padding: 25px 5%;
+      background-color: #1a1a1a;
+      color: #aaaaaa;
+      text-align: center;
+      font-size: 14px;
+      border-top: 4px solid var(--primary-color);
+      margin-top: 60px;
+    }
+
+    .footer p {
+      margin: 5px 0;
+    }
+
+    .copyright-team {
+      font-weight: 700;
+      color: var(--primary-color);
+      font-size: 15px;
+      margin-top: 8px;
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 16px;
+      background-color: rgba(76, 175, 80, 0.1);
+      transition: var(--transition);
+    }
+
+    .copyright-team:hover {
+      background-color: rgba(76, 175, 80, 0.15);
+    }
+
+    .progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 0%;
+      height: 2px;
+      background: var(--card-gradient);
+      z-index: 1001;
+      transition: width 0.3s ease;
+    }
+
+    /* تحسينات للتصميم على الشاشات المختلفة */
+    @media (max-width: 768px) {
+      .navbar {
+        padding: 10px 4%;
+      }
+      
+      .logo {
+        font-size: 24px;
+      }
+      
+      .logo i {
+        font-size: 26px;
+      }
+      
+      .nav-icons {
+        gap: 15px;
+      }
+      
+      .nav-icons a {
+        font-size: 17px;
+        width: 38px;
+        height: 38px;
+      }
+      
+      .main-content {
+        padding: 30px 4%;
+      }
+      
+      .main-content h1 {
+        font-size: 32px;
+      }
+      
+      .slogan {
+        font-size: 16px;
+        margin-bottom: 35px;
+      }
+      
+      .back-button {
+        padding: 10px 16px;
+        font-size: 14px;
+        margin-bottom: 20px;
+      }
+      
+      .search-section {
+        padding: 15px;
+        margin: 20px auto;
+      }
+      
+      .search-container {
+        flex-direction: column;
+        gap: 10px;
+      }
+      
+      .tabs-nav {
+        padding: 15px;
+        margin: 20px auto 25px auto;
+      }
+      
+      .tabs-nav button {
+        min-width: unset;
+        flex-basis: 48%;
+      }
+      
+      .mods-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+        padding: 15px 0;
+      }
+      
+      .mod-card {
+        padding: 0;
+      }
+      
+      .mod-number {
+        font-size: 12px;
+        padding: 4px 8px;
+        top: 10px;
+        left: 10px;
+      }
+      
+      .image-wrapper {
+        height: 140px;
+        margin-bottom: 0;
+      }
+      
+      .mod-content {
+        padding: 15px;
+      }
+      
+      .mod-name {
+        font-size: 18px;
+        margin-bottom: 6px;
+      }
+      
+      .mod-version {
+        font-size: 14px;
+        margin-bottom: 10px;
+      }
+      
+      .download-btn {
+        font-size: 14px;
+        padding: 10px;
+      }
+      
+      .footer {
+        padding: 20px 4%;
+        margin-top: 50px;
+      }
+    }
+
+    @media (min-width: 769px) and (max-width: 1024px) {
+      .mods-grid {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 20px;
+      }
+    }
+  </style>
+
+  <!-- Firebase SDKs -->
+  <script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-analytics.js";
+    import { getDatabase } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
+
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyDgqgIdXgZflmPT4z3IcaIzg6f7BxLEvyE",
+      authDomain: "matrixmodadd.firebaseapp.com",
+      databaseURL: "https://matrixmodadd-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "matrixmodadd",
+      storageBucket: "matrixmodadd.firebasestorage.app",
+      messagingSenderId: "67540662652",
+      appId: "1:67540662652:web:0c597e33134bccf89accf9",
+      measurementId: "G-QQ6FDGTSR5"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+    const database = getDatabase(app);
+    
+    // جعل قاعدة البيانات متاحة عالمياً
+    window.firebaseDatabase = database;
+  </script>
+</head>
+<body>
+  <div class="animated-bg"></div>
+  <div class="progress-bar"></div>
+  <div id="loader" class="loader-overlay">
+    <div class="loader"></div>
+  </div>
+
+  <header class="navbar">
+    <a href="index.html" class="logo">
+      <i class="fas fa-cube"></i>
+      MatrixMuf
+    </a>
+    <nav>
+      <ul class="nav-icons">
+        <li><a href="profile.html" title="بروفايل"><i class="fas fa-user"></i></a></li>
+        <li><a href="#" id="dark-mode-toggle" title="وضع داكن"><i class="fas fa-moon"></i></a></li>
+        <li><a href="support.html" title="دعم فني"><i class="fas fa-headset"></i></a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="main-content">
+    <h1>مودات MatrixMuf</h1>
+    <p class="slogan">اكتشف أفضل المودات والريسورس باكات لماين كرافت</p>
+
+    <!-- زر الرجوع -->
+    <a href="index.html" class="back-button">
+      <i class="fas fa-arrow-right"></i>
+      <span>العودة للواجهة الرئيسية</span>
+    </a>
+
+    <section class="search-section">
+      <div class="search-container">
+        <input type="text" id="searchInput" placeholder="ابحث عن مود أو رقم...">
+        <button id="searchBtn">
+          <i class="fas fa-search"></i>
+          <span>بحث</span>
+        </button>
+      </div>
+    </section>
+
+    <nav class="tabs-nav">
+      <button class="button-link active" id="tabMods" data-category="mods">
+        <i class="fas fa-puzzle-piece"></i>
+        <span>مودات</span>
+      </button>
+      <button class="button-link" id="tabResourcePacks" data-category="resourcePacks">
+        <i class="fas fa-box-open"></i>
+        <span>ريسوس باك</span>
+      </button>
+    </nav>
+
+    <section class="mods-grid" id="modsContainer">
+      <!-- سيتم ملء المحتوى ديناميكياً -->
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>&copy; 2025 MatrixMuf. جميع الحقوق محفوظة.</p>
+    <p class="copyright-team">تمت البرمجة بواسطة فريق MatrixMuf IRAQ</p>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const darkModeToggle = document.getElementById('dark-mode-toggle');
+      const body = document.body;
+      const progressBar = document.querySelector('.progress-bar');
+      const searchInput = document.getElementById('searchInput');
+      const searchBtn = document.getElementById('searchBtn');
+      const modsContainer = document.getElementById('modsContainer');
+      const loader = document.getElementById('loader');
+      const allTabButtons = document.querySelectorAll('.tabs-nav button');
+
+      let allModsData = [];
+
+      // إعداد وضع الظلام
+      const currentTheme = localStorage.getItem('theme');
+      if (currentTheme === 'dark') {
+        body.classList.add('dark-mode');
+        darkModeToggle.querySelector('i').classList.replace('fa-moon', 'fa-sun');
+      }
+
+      darkModeToggle.addEventListener('click', (e) => {
+        e.preventDefault();
+        body.classList.toggle('dark-mode');
+
+        const icon = darkModeToggle.querySelector('i');
+        if (body.classList.contains('dark-mode')) {
+          icon.classList.replace('fa-moon', 'fa-sun');
+          localStorage.setItem('theme', 'dark');
+        } else {
+          icon.classList.replace('fa-sun', 'fa-moon');
+          localStorage.setItem('theme', 'light');
+        }
+      });
+
+      // شريط التقدم
+      window.addEventListener('scroll', () => {
+        const windowHeight = window.innerHeight;
+        const documentHeight = document.documentElement.scrollHeight - windowHeight;
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        const progress = (scrollTop / documentHeight) * 100;
+        progressBar.style.width = `${progress}%`;
+      });
+
+      // البحث والتصفية
+      const applyFiltersAndSearch = () => {
+        const query = searchInput.value.trim().toLowerCase();
+
+        const finalFilteredMods = allModsData.filter(mod => {
+          const name = mod.name?.toLowerCase() || '';
+          const number = mod.number !== null && mod.number !== undefined ? String(mod.number).toLowerCase() : '';
+          return name.includes(query) || number.includes(query) || query === "";
+        });
+
+        displayMods(finalFilteredMods);
+      };
+
+      searchBtn.addEventListener("click", applyFiltersAndSearch);
+      searchInput.addEventListener("input", applyFiltersAndSearch);
+
+      // التبويبات
+      allTabButtons.forEach(button => {
+        button.addEventListener('click', (event) => {
+          allTabButtons.forEach(btn => btn.classList.remove('active'));
+          event.currentTarget.classList.add('active');
+          const category = event.currentTarget.dataset.category;
+          searchInput.value = '';
+          
+          fetchMods(category);
+        });
+      });
+
+      // دالة لجلب البيانات من Firebase
+      const fetchMods = async (category = 'mods') => {
+        if (!window.firebaseDatabase) {
+          console.error("Firebase database not initialized.");
+          modsContainer.innerHTML = "<p class='error-message'>خطأ في تهيئة قاعدة البيانات.</p>";
+          loader?.classList.add('hidden');
+          return;
+        }
+
+        loader.classList.remove('hidden');
+
+        try {
+          // استيراد الدوال اللازمة من Firebase
+          const { ref, onValue } = await import("https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js");
+          
+          const modsRef = ref(window.firebaseDatabase, 'mods');
+          
+          onValue(modsRef, (snapshot) => {
+            if (!snapshot.exists()) {
+              modsContainer.innerHTML = "<p class='no-mods-message'>لا توجد محتوى حالياً. يرجى التحقق لاحقاً!</p>";
+              allModsData = [];
+              loader?.classList.add('hidden');
+              return;
+            }
+
+            const modsObject = snapshot.val();
+            const loadedMods = [];
+
+            Object.keys(modsObject).forEach(key => {
+              const modData = modsObject[key];
+              const modNumber = typeof modData.number === 'number' && !isNaN(modData.number) ? modData.number : null;
+
+              // التأكد من وجود الحقول المطلوبة
+              if (typeof modData === 'object' && modData !== null && modData.name && modData.link && modData.image && modData.version) {
+                loadedMods.push({
+                  id: key,
+                  name: modData.name,
+                  version: modData.version,
+                  image: modData.image,
+                  link: modData.link,
+                  number: modNumber,
+                  category: modData.category || 'mods'
+                });
+              } else {
+                console.warn(`تخطي بيانات غير صالحة تحت المفتاح: ${key}`, modData);
+              }
+            });
+
+            loadedMods.sort((a, b) => {
+              const numA = a.number === null ? Infinity : a.number;
+              const numB = b.number === null ? Infinity : b.number;
+              return numA - numB;
+            });
+
+            allModsData = loadedMods;
+            
+            // تصفية حسب الفئة المطلوبة
+            const filteredMods = allModsData.filter(mod => mod.category === category);
+            displayMods(filteredMods);
+            loader.classList.add('hidden');
+          }, (error) => {
+            console.error("خطأ في جلب المحتوى من Firebase:", error);
+            modsContainer.innerHTML = `<p class='error-message'>حدث خطأ أثناء تحميل المحتوى: ${error.message}. يرجى المحاولة مرة أخرى.</p>`;
+            loader.classList.add('hidden');
+          });
+
+        } catch (error) {
+          console.error("خطأ في جلب المحتوى من Firebase:", error);
+          modsContainer.innerHTML = `<p class='error-message'>حدث خطأ أثناء تحميل المحتوى: ${error.message}. يرجى المحاولة مرة أخرى.</p>`;
+          loader.classList.add('hidden');
+        }
+      };
+
+      const displayMods = (modsToDisplay) => {
+        modsContainer.innerHTML = '';
+
+        if (modsToDisplay.length === 0) {
+          modsContainer.innerHTML = "<p class='no-mods-message'>لا يوجد محتوى مطابق لمعايير البحث في هذه الفئة.</p>";
+          return;
+        }
+
+        modsToDisplay.forEach((mod) => {
+          const modDiv = document.createElement("div");
+          modDiv.className = "mod-card";
+          modDiv.setAttribute("data-name", mod.name || '');
+          modDiv.setAttribute("data-version", mod.version || '');
+          modDiv.setAttribute("data-number", String(mod.number !== null ? mod.number : ''));
+
+          const imageUrl = mod.image && mod.image.startsWith('http') ? mod.image : 'https://via.placeholder.com/280x180?text=No+Image';
+          const downloadLink = mod.link && mod.link.startsWith('http') ? mod.link : '#';
+          const isDownloadable = downloadLink !== '#';
+
+          modDiv.innerHTML = `
+            <div class="mod-number">#${mod.number !== null ? mod.number : 'N/A'}</div>
+            <div class="image-wrapper">
+              <img class="mod-image" src="${imageUrl}" alt="${mod.name || 'صورة'}" loading="lazy">
+            </div>
+            <div class="mod-content">
+              <div class="mod-details">
+                <h3 class="mod-name" title="${mod.name || 'اسم غير متوفر'}">${mod.name || 'اسم غير متوفر'}</h3>
+                <p class="mod-version">الإصدار: ${mod.version || 'غير محدد'}</p>
+              </div>
+              <a href="${downloadLink}" target="_blank" rel="noopener noreferrer" class="download-btn" ${!isDownloadable ? 'aria-disabled="true" title="رابط غير متوفر" style="opacity: 0.6; cursor: not-allowed;"' : ''} >
+                <i class="fas fa-download"></i>
+                <span>${isDownloadable ? 'تحميل' : 'لا يوجد رابط'}</span>
+              </a>
+            </div>
+          `;
+          modsContainer.appendChild(modDiv);
+        });
+      };
+
+      // التحميل الأولي: البدء بقاعدة البيانات الرئيسية لـ 'mods'
+      fetchMods('mods');
+    });
+  </script>
+</body>
+</html>

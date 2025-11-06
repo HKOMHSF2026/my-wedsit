@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الدعم الفني - MatrixMuf</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4CAF50;
+            --primary-light: #80e27e;
+            --primary-dark: #087f23;
+            --secondary-color: #FFFFFF;
+            --text-color: #333333;
+            --text-light: #666666;
+            --background-light: #f8f9fa;
+            --background-dark: #121212;
+            --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --hover-green: #388E3C;
+            --font-family-cairo: 'Cairo', sans-serif;
+            --transition: all 0.3s ease;
+            --error-color: #f44336;
+            --success-color: #4CAF50;
+            --warning-color: #ff9800;
+            --info-color: #2196F3;
+        }
+
+        body.dark-mode {
+            --text-color: #e0e0e0;
+            --text-light: #b0b0b0;
+            --background-light: var(--background-dark);
+            --card-shadow: 0 4px 15px rgba(0, 255, 0, 0.15);
+            background-color: var(--background-dark);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-family-cairo);
+            background-color: var(--background-light);
+            color: var(--text-color);
+            direction: rtl;
+            text-align: right;
+            transition: background-color 0.3s, color 0.3s;
+            overflow-x: hidden;
+            position: relative;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.03;
+            background: 
+                linear-gradient(45deg, var(--primary-color) 25%, transparent 25%), 
+                linear-gradient(-45deg, var(--primary-color) 25%, transparent 25%), 
+                linear-gradient(45deg, transparent 75%, var(--primary-color) 75%), 
+                linear-gradient(-45deg, transparent 75%, var(--primary-color) 75%);
+            background-size: 20px 20px;
+            background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+            animation: moveBg 25s linear infinite;
+        }
+
+        @keyframes moveBg {
+            0% { background-position: 0 0, 0 10px, 10px -10px, -10px 0px; }
+            100% { background-position: 40px 40px, 40px 50px, 50px 30px, 30px 40px; }
+        }
+
+        .dark-mode .animated-bg {
+            opacity: 0.02;
+        }
+
+        a {
+            text-decoration: none;
+            color: var(--primary-color);
+            transition: var(--transition);
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 5%;
+            background-color: var(--secondary-color);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            transition: var(--transition);
+        }
+
+        .dark-mode .navbar {
+            background-color: #1a1a1a;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .logo {
+            font-size: 26px;
+            font-weight: 800;
+            color: var(--primary-color);
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+        }
+
+        .logo:hover {
+            transform: scale(1.03);
+        }
+
+        .logo i {
+            font-size: 28px;
+        }
+
+        .nav-icons {
+            list-style: none;
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-icons a {
+            color: var(--text-color);
+            font-size: 18px;
+            transition: var(--transition);
+            display: block;
+            position: relative;
+            padding: 8px;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav-icons a:hover {
+            color: var(--primary-color);
+            background-color: rgba(76, 175, 80, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: 0;
+            left: 0;
+            background-color: var(--error-color);
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .main-content {
+            padding: 40px 5%;
+            text-align: center;
+            position: relative;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .page-header {
+            margin-bottom: 30px;
+            width: 100%;
+        }
+
+        .page-header h1 {
+            font-size: 36px;
+            margin-bottom: 12px;
+            color: var(--primary-color);
+            font-weight: 800;
+            position: relative;
+            display: inline-block;
+        }
+
+        .page-header h1::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            right: 0;
+            width: 50%;
+            height: 3px;
+            background: linear-gradient(to right, var(--primary-color), transparent);
+            border-radius: 2px;
+        }
+
+        .page-description {
+            font-size: 18px;
+            color: var(--text-light);
+            font-weight: 500;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .support-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .support-form-container, .support-messages-container {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .support-card {
+            background-color: var(--secondary-color);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            text-align: right;
+            transition: var(--transition);
+            border: 1px solid rgba(76, 175, 80, 0.1);
+            height: 100%;
+        }
+
+        .dark-mode .support-card {
+            background-color: #1e1e1e;
+            border: 1px solid rgba(76, 175, 80, 0.15);
+        }
+
+        .support-card h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .support-card h2 i {
+            font-size: 22px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: right;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .dark-mode .form-group label {
+            color: #e0e0e0;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: var(--font-family-cairo);
+            transition: var(--transition);
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+        }
+
+        .dark-mode .form-control {
+            background-color: #2a2a2a;
+            border-color: #444;
+            color: #e0e0e0;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
+        }
+
+        textarea.form-control {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: var(--font-family-cairo);
+        }
+
+        .btn:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .btn-block {
+            width: 100%;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-close {
+            background-color: transparent;
+            border: none;
+            color: var(--text-light);
+            font-size: 20px;
+            cursor: pointer;
+            transition: var(--transition);
+            padding: 5px;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-close:hover {
+            background-color: rgba(0, 0, 0, 0.1);
+            color: var(--error-color);
+        }
+
+        .dark-mode .btn-close:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .alert {
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .alert-error {
+            background-color: rgba(244, 67, 54, 0.1);
+            color: var(--error-color);
+            border: 1px solid rgba(244, 67, 54, 0.2);
+        }
+
+        .alert-success {
+            background-color: rgba(76, 175, 80, 0.1);
+            color: var(--success-color);
+            border: 1px solid rgba(76, 175, 80, 0.2);
+        }
+
+        .alert-info {
+            background-color: rgba(33, 150, 243, 0.1);
+            color: var(--info-color);
+            border: 1px solid rgba(33, 150, 243, 0.2);
+        }
+
+        .alert-warning {
+            background-color: rgba(255, 152, 0, 0.1);
+            color: var(--warning-color);
+            border: 1px solid rgba(255, 152, 0, 0.2);
+        }
+
+        .messages-list {
+            max-height: 400px;
+            overflow-y: auto;
+            padding: 10px;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .dark-mode .messages-list {
+            border-color: #444;
+        }
+
+        .message-item {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            text-align: right;
+        }
+
+        .dark-mode .message-item {
+            border-bottom-color: #444;
+        }
+
+        .message-item:last-child {
+            border-bottom: none;
+        }
+
+        .message-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .message-sender {
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .message-date {
+            font-size: 12px;
+            color: var(--text-light);
+        }
+
+        .message-content {
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+
+        .message-reply {
+            background-color: rgba(76, 175, 80, 0.1);
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+            border-right: 3px solid var(--primary-color);
+        }
+
+        .dark-mode .message-reply {
+            background-color: rgba(76, 175, 80, 0.15);
+        }
+
+        .message-reply-header {
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 30px;
+            color: var(--text-light);
+        }
+
+        .empty-state i {
+            font-size: 48px;
+            margin-bottom: 15px;
+            color: #ddd;
+        }
+
+        .dark-mode .empty-state i {
+            color: #444;
+        }
+
+        .notification-panel {
+            position: fixed;
+            top: 70px;
+            left: 20px;
+            width: 350px;
+            background-color: var(--secondary-color);
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            transform: translateX(-400px);
+            transition: transform 0.3s ease;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .dark-mode .notification-panel {
+            background-color: #1e1e1e;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .notification-panel.active {
+            transform: translateX(0);
+        }
+
+        .notification-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .dark-mode .notification-header {
+            border-bottom-color: #444;
+        }
+
+        .notification-header h3 {
+            margin: 0;
+            color: var(--primary-color);
+            font-size: 18px;
+        }
+
+        .notification-list {
+            padding: 10px;
+        }
+
+        .notification-item {
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .dark-mode .notification-item {
+            border-bottom-color: #444;
+        }
+
+        .notification-item:last-child {
+            border-bottom: none;
+        }
+
+        .notification-item:hover {
+            background-color: rgba(76, 175, 80, 0.05);
+        }
+
+        .dark-mode .notification-item:hover {
+            background-color: rgba(76, 175, 80, 0.1);
+        }
+
+        .notification-item.unread {
+            background-color: rgba(33, 150, 243, 0.1);
+        }
+
+        .dark-mode .notification-item.unread {
+            background-color: rgba(33, 150, 243, 0.15);
+        }
+
+        .notification-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .notification-content {
+            font-size: 14px;
+            color: var(--text-light);
+            margin-bottom: 5px;
+        }
+
+        .notification-date {
+            font-size: 12px;
+            color: var(--text-light);
+        }
+
+        .footer {
+            padding: 25px 5%;
+            background-color: #1a1a1a;
+            color: #aaaaaa;
+            text-align: center;
+            font-size: 14px;
+            border-top: 4px solid var(--primary-color);
+            margin-top: 60px;
+        }
+
+        .footer p {
+            margin: 5px 0;
+        }
+
+        .copyright-team {
+            font-weight: 700;
+            color: var(--primary-color);
+            font-size: 15px;
+            margin-top: 8px;
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 16px;
+            background-color: rgba(76, 175, 80, 0.1);
+            transition: var(--transition);
+        }
+
+        .copyright-team:hover {
+            background-color: rgba(76, 175, 80, 0.15);
+        }
+
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 2px;
+            background: linear-gradient(to right, var(--primary-color), var(--primary-light);
+            z-index: 1001;
+            transition: width 0.3s ease;
+        }
+
+        @media (max-width: 768px) {
+            .support-container {
+                flex-direction: column;
+            }
+            
+            .support-form-container, .support-messages-container {
+                width: 100%;
+            }
+            
+            .notification-panel {
+                width: 300px;
+                left: 10px;
+            }
+            
+            .page-header h1 {
+                font-size: 30px;
+            }
+            
+            .page-description {
+                font-size: 16px;
+            }
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="animated-bg"></div>
+    <div class="progress-bar"></div>
+
+    <header class="navbar">
+        <a href="index.html" class="logo">
+            <i class="fas fa-cube"></i>
+            MatrixMuf
+        </a>
+        <nav>
+            <ul class="nav-icons">
+                <li><a href="profile.html" title="بروفايل"><i class="fas fa-user"></i></a></li>
+                <li><a href="#" id="notification-toggle" title="الإشعارات">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge" id="notification-count">3</span>
+                </a></li>
+                <li><a href="#" id="dark-mode-toggle" title="وضع داكن"><i class="fas fa-moon"></i></a></li>
+                <li><a href="support.html" title="دعم فني"><i class="fas fa-headset"></i></a></li>
+                <li><a href="index.html" class="btn-close" title="العودة للرئيسية"><i class="fas fa-times"></i></a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- لوحة الإشعارات -->
+    <div class="notification-panel" id="notification-panel">
+        <div class="notification-header">
+            <h3><i class="fas fa-bell"></i> الإشعارات</h3>
+            <button class="btn-close" id="close-notifications">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="notification-list">
+            <div class="notification-item unread">
+                <div class="notification-title">
+                    <i class="fas fa-reply text-primary"></i>
+                    رد على رسالتك
+                </div>
+                <div class="notification-content">لقد تم الرد على رسالتك في الدعم الفني. يرجى مراجعة الرد.</div>
+                <div class="notification-date">منذ 2 ساعة</div>
+            </div>
+            <div class="notification-item unread">
+                <div class="notification-title">
+                    <i class="fas fa-check-circle text-success"></i>
+                    تم استلام رسالتك
+                </div>
+                <div class="notification-content">لقد استلمنا رسالتك وسيتم الرد عليها خلال 24 ساعة.</div>
+                <div class="notification-date">منذ 1 يوم</div>
+            </div>
+            <div class="notification-item">
+                <div class="notification-title">
+                    <i class="fas fa-info-circle text-info"></i>
+                    تحديث النظام
+                </div>
+                <div class="notification-content">تم تحديث نظام الدعم الفني بميزات جديدة.</div>
+                <div class="notification-date">منذ 3 أيام</div>
+            </div>
+        </div>
+    </div>
+
+    <main class="main-content">
+        <div class="page-header">
+            <h1>الدعم الفني</h1>
+            <p class="page-description">نحن هنا لمساعدتك! أرسل لنا استفسارك أو مشكلتك وسنرد عليك في أقرب وقت ممكن.</p>
+        </div>
+
+        <div class="support-container">
+            <!-- نموذج إرسال رسالة دعم -->
+            <div class="support-form-container">
+                <div class="support-card">
+                    <h2><i class="fas fa-paper-plane"></i> إرسال رسالة دعم</h2>
+                    <div id="support-alert" class="alert hidden"></div>
+                    <form id="support-form">
+                        <div class="form-group">
+                            <label for="sender-name">اسم المرسل</label>
+                            <input type="text" id="sender-name" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="sender-email">البريد الإلكتروني</label>
+                            <input type="email" id="sender-email" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="message-type">نوع الرسالة</label>
+                            <select id="message-type" class="form-control" required>
+                                <option value="">اختر نوع الرسالة</option>
+                                <option value="مشكلة تقنية">مشكلة تقنية</option>
+                                <option value="اقتراح">اقتراح</option>
+                                <option value="بلاغ عن محتوى">بلاغ عن محتوى</option>
+                                <option value="استفسار عام">استفسار عام</option>
+                                <option value="كلمات محظورة">كلمات محظورة</option>
+                                <option value="كلمات غير محظورة">كلمات غير محظورة</option>
+                                <option value="شكوى">شكوى</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="message-content">وصف المشكلة أو الرسالة</label>
+                            <textarea id="message-content" class="form-control" required placeholder="يرجى وصف مشكلتك أو رسالتك بالتفصيل..."></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-block">إرسال الرسالة</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- رسائل الدعم السابقة -->
+            <div class="support-messages-container">
+                <div class="support-card">
+                    <h2><i class="fas fa-history"></i> رسائلك السابقة</h2>
+                    <div class="messages-list" id="messages-list">
+                        <div class="empty-state">
+                            <i class="fas fa-inbox"></i>
+                            <p>لا توجد رسائل سابقة</p>
+                            <p>سيظهر تاريخ رسائلك هنا بعد إرسالها</p>
+                        </div>
+                        <!-- سيتم إضافة الرسائل ديناميكياً هنا -->
+                    </div>
+                    <button id="refresh-messages" class="btn btn-outline btn-block">
+                        <i class="fas fa-sync-alt"></i> تحديث الرسائل
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2025 MatrixMuf. جميع الحقوق محفوظة.</p>
+        <p class="copyright-team">تمت البرمجة بواسطة فريق MatrixMuf IRAQ</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // عناصر DOM
+            const darkModeToggle = document.getElementById('dark-mode-toggle');
+            const body = document.body;
+            const progressBar = document.querySelector('.progress-bar');
+            
+            // عناصر الدعم الفني
+            const supportForm = document.getElementById('support-form');
+            const supportAlert = document.getElementById('support-alert');
+            const messagesList = document.getElementById('messages-list');
+            const refreshMessagesBtn = document.getElementById('refresh-messages');
+            
+            // عناصر الإشعارات
+            const notificationToggle = document.getElementById('notification-toggle');
+            const notificationPanel = document.getElementById('notification-panel');
+            const closeNotifications = document.getElementById('close-notifications');
+            const notificationCount = document.getElementById('notification-count');
+
+            // تحميل الرسائل من التخزين المحلي
+            function loadMessages() {
+                const messages = JSON.parse(localStorage.getItem('supportMessages')) || [];
+                displayMessages(messages);
+            }
+
+            // عرض الرسائل
+            function displayMessages(messages) {
+                if (messages.length === 0) {
+                    messagesList.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-inbox"></i>
+                            <p>لا توجد رسائل سابقة</p>
+                            <p>سيظهر تاريخ رسائلك هنا بعد إرسالها</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                messagesList.innerHTML = '';
+                messages.reverse().forEach((message, index) => {
+                    const messageElement = document.createElement('div');
+                    messageElement.className = 'message-item';
+                    
+                    let replySection = '';
+                    if (message.reply) {
+                        replySection = `
+                            <div class="message-reply">
+                                <div class="message-reply-header">
+                                    <i class="fas fa-reply"></i> رد الدعم الفني
+                                </div>
+                                <div class="message-content">${message.reply}</div>
+                                <div class="message-date">${message.replyDate}</div>
+                            </div>
+                        `;
+                    }
+                    
+                    messageElement.innerHTML = `
+                        <div class="message-header">
+                            <span class="message-sender">${message.senderName}</span>
+                            <span class="message-date">${message.date}</span>
+                        </div>
+                        <div class="message-content">
+                            <strong>النوع:</strong> ${message.type}<br>
+                            ${message.content}
+                        </div>
+                        ${replySection}
+                    `;
+                    
+                    messagesList.appendChild(messageElement);
+                });
+            }
+
+            // إرسال رسالة دعم جديدة
+            supportForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                const senderName = document.getElementById('sender-name').value;
+                const senderEmail = document.getElementById('sender-email').value;
+                const messageType = document.getElementById('message-type').value;
+                const messageContent = document.getElementById('message-content').value;
+                
+                // التحقق من صحة البيانات
+                if (!senderName || !senderEmail || !messageType || !messageContent) {
+                    showAlert('يرجى ملء جميع الحقول المطلوبة', 'error');
+                    return;
+                }
+                
+                // إنشاء رسالة جديدة
+                const newMessage = {
+                    id: Date.now(),
+                    senderName,
+                    senderEmail,
+                    type: messageType,
+                    content: messageContent,
+                    date: new Date().toLocaleString('ar-EG'),
+                    reply: null,
+                    replyDate: null
+                };
+                
+                // حفظ الرسالة في التخزين المحلي
+                const messages = JSON.parse(localStorage.getItem('supportMessages')) || [];
+                messages.push(newMessage);
+                localStorage.setItem('supportMessages', JSON.stringify(messages));
+                
+                // إظهار رسالة نجاح
+                showAlert('تم إرسال رسالتك بنجاح! سنرد عليك في أقرب وقت ممكن.', 'success');
+                
+                // إعادة تعيين النموذج
+                supportForm.reset();
+                
+                // تحديث قائمة الرسائل
+                loadMessages();
+                
+                // زيادة عدد الإشعارات
+                updateNotificationCount(1);
+            });
+
+            // تحديث الرسائل
+            refreshMessagesBtn.addEventListener('click', () => {
+                loadMessages();
+                showAlert('تم تحديث الرسائل', 'info');
+            });
+
+            // عرض رسالة تنبيه
+            function showAlert(message, type) {
+                supportAlert.textContent = message;
+                supportAlert.className = 'alert';
+                
+                switch (type) {
+                    case 'error':
+                        supportAlert.classList.add('alert-error');
+                        break;
+                    case 'success':
+                        supportAlert.classList.add('alert-success');
+                        break;
+                    case 'info':
+                        supportAlert.classList.add('alert-info');
+                        break;
+                    case 'warning':
+                        supportAlert.classList.add('alert-warning');
+                        break;
+                }
+                
+                supportAlert.classList.remove('hidden');
+                
+                // إخفاء الرسالة بعد 5 ثوانٍ
+                setTimeout(() => {
+                    supportAlert.classList.add('hidden');
+                }, 5000);
+            }
+
+            // تحديث عدد الإشعارات
+            function updateNotificationCount(count) {
+                const currentCount = parseInt(notificationCount.textContent) || 0;
+                const newCount = currentCount + count;
+                notificationCount.textContent = newCount;
+                
+                if (newCount > 0) {
+                    notificationCount.style.display = 'flex';
+                } else {
+                    notificationCount.style.display = 'none';
+                }
+            }
+
+            // فتح/إغلاق لوحة الإشعارات
+            notificationToggle.addEventListener('click', (e) => {
+                e.preventDefault();
+                notificationPanel.classList.toggle('active');
+            });
+
+            closeNotifications.addEventListener('click', () => {
+                notificationPanel.classList.remove('active');
+            });
+
+            // إغلاق لوحة الإشعارات عند النقر خارجها
+            document.addEventListener('click', (e) => {
+                if (!notificationPanel.contains(e.target) && !notificationToggle.contains(e.target)) {
+                    notificationPanel.classList.remove('active');
+                }
+            });
+
+            // تحميل الرسائل عند فتح الصفحة
+            loadMessages();
+
+            // وضع الظلام
+            const currentTheme = localStorage.getItem('theme');
+            if (currentTheme === 'dark') {
+                body.classList.add('dark-mode');
+                darkModeToggle.querySelector('i').classList.replace('fa-moon', 'fa-sun');
+            }
+
+            darkModeToggle.addEventListener('click', (e) => {
+                e.preventDefault();
+                body.classList.toggle('dark-mode');
+
+                const icon = darkModeToggle.querySelector('i');
+                if (body.classList.contains('dark-mode')) {
+                    icon.classList.replace('fa-moon', 'fa-sun');
+                    localStorage.setItem('theme', 'dark');
+                } else {
+                    icon.classList.replace('fa-sun', 'fa-moon');
+                    localStorage.setItem('theme', 'light');
+                }
+            });
+
+            // شريط التقدم
+            window.addEventListener('scroll', () => {
+                const windowHeight = window.innerHeight;
+                const documentHeight = document.documentElement.scrollHeight - windowHeight;
+                const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                const progress = (scrollTop / documentHeight) * 100;
+                progressBar.style.width = `${progress}%`;
+            });
+        });
+    </script>
+</body>
+</html>

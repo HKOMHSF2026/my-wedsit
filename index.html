@@ -1,1626 +1,583 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>متجر حكومه   </title>
-  <meta name="description" content="متجر حكومه: حسابات، سيرفرات، وريلمات ماين كرافت بجودة عالية وأسعار تنافسية. اكتشف عروضنا الحصرية الآن!">
-  <meta name="keywords" content="متجر حكومه, ماين كرافت, حسابات ماين كرافت, سيرفرات ماين كرافت, ريلمات ماين كرافت, متجر ألعاب, شراء سيرفرات, شراء حسابات">
-  <link rel="icon" href="https://example.com/favicon.ico" type="image/x-icon">
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&family=Tajawal:wght@300;400;700&display=swap" rel="stylesheet">
-  
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script> 
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-analytics-compat.js"></script>
-  
-  <script>
-    // تهيئة Firebase باستخدام معلومات مشروعك
-    const firebaseConfig = {
-      apiKey: "AIzaSyA5VT5g4cdpdA1ppiqXjAIa2O_C7YjxFkI",
-      authDomain: "store-372e5.firebaseapp.com",
-      databaseURL: "https://store-372e5-default-rtdb.firebaseio.com", 
-      projectId: "store-372e5",
-      storageBucket: "store-372e5.firebasestorage.app",
-      messagingSenderId: "1074162968634",
-      appId: "1:1074162968634:web:d524667d50fba4967b6d03",
-      measurementId: "G-M155D7N91P"
-    };
-
-    // بدء تشغيل Firebase وتحديد قاعدة بيانات Realtime Database
-    const app = firebase.initializeApp(firebaseConfig);
-    const database = firebase.database(); 
-    firebase.analytics(); 
-  </script>
-
-<style>
-    /* Global Styles & Variables */
-    :root {
-      --primary-color: #00ff7f; /* Bright Green */
-      --secondary-color: #008080; /* Teal */
-      --dark-bg: #0f2027; /* Dark Blue-Gray */
-      --medium-bg: #203a43; /* Medium Blue-Gray */
-      --light-bg: #2c5364; /* Light Blue-Gray */
-      --text-color: #ffffff;
-      --accent-shadow: rgba(0, 255, 127, 0.5);
-      --red-alert: rgba(255, 0, 0, 0.7);
-      --card-bg: rgba(255, 255, 255, 0.08);
-      --card-hover-bg: rgba(255, 255, 255, 0.12);
-      --sidebar-bg: rgba(0, 0, 0, 0.7);
-      --cart-bg: rgba(255, 255, 255, 0.15);
-      --border-radius-sm: 8px;
-      --border-radius-md: 12px;
-      --transition-speed: 0.3s;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      background: linear-gradient(to right, var(--dark-bg), var(--medium-bg), var(--light-bg));
-      color: var(--text-color);
-      font-family: 'Tajawal', sans-serif;
-      line-height: 1.6;
-      margin: 0;
-      padding: 0;
-      overflow-x: hidden;
-      scroll-behavior: smooth;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-    }
-
-    h1, h2, h3, h4, h5, h6 {
-      font-family: 'Cairo', sans-serif;
-      margin-bottom: 15px;
-      color: var(--primary-color);
-      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
-    }
-
-    p {
-      margin-bottom: 10px;
-    }
-
-    a {
-      color: var(--primary-color);
-      text-decoration: none;
-      transition: color var(--transition-speed);
-    }
-
-    a:hover {
-      color: var(--secondary-color);
-    }
-
-    /* Scrollbar Styling */
-    body::-webkit-scrollbar {
-      width: 12px;
-    }
-
-    body::-webkit-scrollbar-track {
-      background: var(--medium-bg);
-      border-radius: 10px;
-    }
-
-    body::-webkit-scrollbar-thumb {
-      background-color: var(--primary-color);
-      border-radius: 10px;
-      border: 3px solid var(--medium-bg);
-    }
-
-    /* Container */
-    .container {
-      max-width: 1200px;
-      margin: auto;
-      padding: 20px;
-    }
-
-    /* Header */
-    .header {
-      text-align: center;
-      padding: 40px 20px;
-      margin-bottom: 30px;
-      position: relative;
-      background: rgba(0, 0, 0, 0.2);
-      border-radius: var(--border-radius-md);
-      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
-    }
-
-    .header h1 {
-      font-size: 3.5em;
-      margin-bottom: 10px;
-      color: var(--text-color);
-      text-shadow: 0 0 15px var(--primary-color);
-      animation: neonPulse 2s infinite alternate;
-    }
-
-    .header p {
-      font-size: 1.2em;
-      opacity: 0.8;
-    }
-
-    @keyframes neonPulse {
-      0% { text-shadow: 0 0 15px var(--primary-color); }
-      100% { text-shadow: 0 0 25px var(--primary-color), 0 0 40px var(--secondary-color); }
-    }
-
-    /* Fixed Action Buttons (Cart Icon & Sidebar Toggle) */
-    .fixed-action-buttons {
-      position: fixed;
-      top: 20px;
-      display: flex;
-      gap: 15px;
-      z-index: 1050;
-      left: 20px; /* For RTL layout, push to left */
-    }
-
-    .cart-icon, .sidebar-toggle { /* Changed order here */
-      font-size: 24px;
-      cursor: pointer;
-      color: var(--text-color);
-      background: rgba(0, 255, 127, 0.15);
-      padding: 12px 18px;
-      border-radius: 50px; /* Pill shape */
-      box-shadow: 0 4px 15px var(--accent-shadow);
-      transition: background var(--transition-speed), transform var(--transition-speed), box-shadow var(--transition-speed);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      white-space: nowrap;
-      position: relative; /* Needed for positioning badge */
-    }
-
-    .cart-icon:hover, .sidebar-toggle:hover {
-      background: rgba(0, 255, 127, 0.3);
-      transform: translateY(-3px);
-      box-shadow: 0 6px 20px var(--accent-shadow);
-    }
-
-    /* Cart Badge - Positioned on cart icon */
-    .cart-badge {
-      position: absolute;
-      top: -8px; /* Adjusted position on icon */
-      right: -8px; /* Adjusted position on icon */
-      background: var(--red-alert);
-      color: var(--text-color);
-      font-size: 13px;
-      border-radius: 50%;
-      min-width: 24px;
-      height: 24px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: bold;
-      padding: 2px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
-      z-index: 1; /* Relative to its parent .cart-icon */
-      transition: transform 0.2s ease, opacity 0.2s ease;
-    }
-    .cart-badge.hidden {
-      opacity: 0;
-      transform: scale(0);
-    }
-
-    /* Sidebar */
-    .sidebar-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.5);
-      backdrop-filter: blur(5px);
-      z-index: 1000;
-      opacity: 0;
-      visibility: hidden;
-      transition: opacity var(--transition-speed), visibility var(--transition-speed);
-    }
-
-    .sidebar {
-      position: fixed;
-      right: -280px; /* Initial position for RTL */
-      top: 0;
-      width: 260px;
-      height: 100%;
-      background: var(--sidebar-bg);
-      box-shadow: -8px 0 20px rgba(0, 255, 127, 0.3);
-      transition: right var(--transition-speed) ease-in-out;
-      padding: 25px 15px;
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-      z-index: 1001;
-      backdrop-filter: blur(10px);
-      border-top-left-radius: 10px;
-      border-bottom-left-radius: 10px;
-    }
-
-    .sidebar.active {
-      right: 0;
-    }
-
-    .sidebar-overlay.active {
-      opacity: 1;
-      visibility: visible;
-    }
-
-    .sidebar .close-btn {
-      align-self: flex-start; /* For RTL */
-      background: var(--red-alert);
-      color: var(--text-color);
-      border: none;
-      border-radius: 50%;
-      width: 30px;
-      height: 30px;
-      font-size: 18px;
-      line-height: 30px;
-      padding: 0;
-      cursor: pointer;
-      margin-bottom: 20px;
-      transition: transform 0.2s ease, background var(--transition-speed);
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-    }
-
-    .sidebar .close-btn:hover {
-      background: rgba(255, 0, 0, 0.9);
-      transform: scale(1.1);
-    }
-
-    .sidebar button.menu-item {
-      background: rgba(255, 255, 255, 0.08);
-      border: none;
-      color: var(--text-color);
-      font-size: 1.1em;
-      text-align: right;
-      cursor: pointer;
-      padding: 15px;
-      border-radius: var(--border-radius-md);
-      transition: background var(--transition-speed), transform 0.2s ease;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-family: 'Cairo', sans-serif;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-    }
-
-    .sidebar button.menu-item:hover {
-      background: rgba(0, 255, 127, 0.25);
-      transform: translateX(-5px); /* For RTL */
-    }
-    
-    /* Cart */
-    .cart-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.5);
-      backdrop-filter: blur(5px);
-      z-index: 990;
-      opacity: 0;
-      visibility: hidden;
-      transition: opacity var(--transition-speed), visibility var(--transition-speed);
-    }
-
-    .cart {
-      position: fixed;
-      top: 80px;
-      right: 20px;
-      background: var(--cart-bg);
-      padding: 20px;
-      border-radius: var(--border-radius-md);
-      width: 300px;
-      max-height: 80vh;
-      overflow-y: auto;
-      box-shadow: 0 8px 25px var(--accent-shadow);
-      text-align: right;
-      backdrop-filter: blur(12px);
-      z-index: 995;
-      transform: scale(0.9) translateY(-20px);
-      opacity: 0;
-      visibility: hidden;
-      transition: transform var(--transition-speed) ease-out, opacity var(--transition-speed) ease-out, visibility var(--transition-speed);
-    }
-
-    .cart.active {
-      transform: scale(1) translateY(0);
-      opacity: 1;
-      visibility: visible;
-    }
-
-    .cart-overlay.active {
-      opacity: 1;
-      visibility: visible;
-    }
-
-    .cart h3 {
-      font-size: 1.8em;
-      margin-bottom: 20px;
-      color: var(--primary-color);
-      border-bottom: 2px solid var(--secondary-color);
-      padding-bottom: 10px;
-    }
-
-    .cart .close-cart {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      background: var(--red-alert);
-      color: var(--text-color);
-      border: none;
-      border-radius: 50%;
-      width: 28px;
-      height: 28px;
-      font-size: 16px;
-      line-height: 28px;
-      padding: 0;
-      cursor: pointer;
-      transition: transform 0.2s ease, background var(--transition-speed);
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-    }
-
-    .cart .close-cart:hover {
-      background: rgba(255, 0, 0, 0.9);
-      transform: scale(1.1);
-    }
-
-    .cart ul {
-      list-style: none;
-      padding: 0;
-      margin-top: 15px;
-      max-height: 250px;
-      overflow-y: auto;
-      padding-right: 5px; /* For scrollbar */
-    }
-
-    .cart ul::-webkit-scrollbar {
-      width: 8px;
-    }
-
-    .cart ul::-webkit-scrollbar-track {
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 10px;
-    }
-
-    .cart ul::-webkit-scrollbar-thumb {
-      background-color: var(--primary-color);
-      border-radius: 10px;
-      border: 2px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .cart-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 10px;
-      padding: 8px 0;
-      border-bottom: 1px dashed rgba(255, 255, 255, 0.2);
-    }
-
-    .cart-item:last-child {
-      border-bottom: none;
-    }
-
-    .cart-item span {
-      flex-grow: 1;
-      font-size: 1.05em;
-    }
-
-    .cart-item .quantity-controls {
-      display: flex;
-      align-items: center;
-      margin-left: 10px;
-    }
-
-    .cart-item .quantity-controls button {
-      background: rgba(0, 0, 0, 0.2);
-      color: var(--text-color);
-      border: 1px solid var(--primary-color);
-      border-radius: 5px;
-      width: 25px;
-      height: 25px;
-      font-size: 16px;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-
-    .cart-item .quantity-controls button:hover {
-      background: rgba(0, 255, 127, 0.3);
-    }
-
-    .cart-item .quantity-controls span {
-      margin: 0 8px;
-      font-weight: bold;
-      min-width: 20px;
-      text-align: center;
-    }
-
-    .remove-btn {
-      background: var(--red-alert);
-      color: var(--text-color);
-      border: none;
-      border-radius: 50%;
-      width: 22px;
-      height: 22px;
-      font-size: 12px;
-      cursor: pointer;
-      transition: transform 0.2s ease, background 0.2s;
-      margin-right: 5px;
-    }
-
-    .remove-btn:hover {
-      background: rgba(255, 0, 0, 0.9);
-      transform: scale(1.1);
-    }
-
-    #empty-cart-message {
-      text-align: center;
-      font-style: italic;
-      color: rgba(255, 255, 255, 0.7);
-      margin-top: 20px;
-      display: none; /* Hidden by default */
-    }
-
-    #total-price {
-      font-size: 1.3em;
-      font-weight: bold;
-      margin-top: 20px;
-      padding-top: 15px;
-      border-top: 2px solid var(--secondary-color);
-      color: var(--primary-color);
-      text-align: center;
-    }
-
-    .checkout-buttons {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      margin-top: 20px;
-    }
-
-    .checkout-buttons .checkout-button {
-      display: block;
-      text-align: center;
-      background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
-      color: var(--text-color);
-      border: none;
-      padding: 15px;
-      font-size: 1.2em;
-      font-weight: bold;
-      text-decoration: none;
-      border-radius: var(--border-radius-md);
-      width: 100%;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-      box-shadow: 0 5px 15px rgba(0, 255, 127, 0.4);
-      font-family: 'Cairo', sans-serif;
-      font-weight: 700;
-    }
-
-    .checkout-buttons .checkout-button.whatsapp {
-      background: linear-gradient(45deg, #25D366, #128C7E); /* WhatsApp green colors */
-      box-shadow: 0 5px 15px rgba(37, 211, 102, 0.4);
-    }
-
-    .checkout-buttons .checkout-button:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 7px 20px rgba(0, 255, 127, 0.6);
-    }
-    .checkout-buttons .checkout-button.whatsapp:hover {
-      box-shadow: 0 7px 20px rgba(37, 211, 102, 0.6);
-    }
-
-
-    /* Sections (Product Categories) */
-    .section-title {
-      font-size: 2.5em;
-      text-align: center;
-      margin-bottom: 30px;
-      color: var(--primary-color);
-      text-shadow: 0 0 10px rgba(0, 255, 127, 0.6);
-      padding-bottom: 10px;
-      border-bottom: 2px solid var(--secondary-color);
-    }
-
-    .section {
-      display: none;
-      margin-top: 20px;
-      flex-wrap: wrap;
-      justify-content: center; /* Ensures items are centered in the available space */
-      gap: 20px; /* Gap between items */
-      animation: fadeIn 0.8s ease-out;
-    }
-
-    .section.active {
-      display: flex;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* Product Item Card */
-    .item {
-      background: var(--card-bg);
-      padding: 20px;
-      border-radius: var(--border-radius-md);
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-      text-align: center;
-      flex: 1 1 calc(33.333% - (2 * 20px / 3)); /* For 3 items per row with 20px gap */
-      max-width: calc(33.333% - (2 * 20px / 3)); /* Ensure max width doesn't exceed calculated value */
-      min-width: 280px; /* Minimum width to prevent items from becoming too small */
-      position: relative;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
-      border: 1px solid rgba(0, 255, 127, 0.1);
-      cursor: pointer; /* Indicate clickable */
-    }
-
-    .item:hover {
-      transform: translateY(-7px) scale(1.02);
-      box-shadow: 0 12px 35px var(--accent-shadow);
-      background: var(--card-hover-bg);
-    }
-
-    .item img {
-      width: 100%;
-      height: 180px; /* Fixed height for consistency */
-      object-fit: cover; /* Ensures images cover the area */
-      border-radius: var(--border-radius-sm);
-      margin-bottom: 15px;
-      transition: transform 0.3s ease;
-    }
-
-    .item:hover img {
-      transform: scale(1.03);
-    }
-
-    .item h3 {
-      font-size: 1.6em;
-      margin-bottom: 10px;
-      color: var(--primary-color);
-    }
-
-    .item p {
-      font-size: 1.1em;
-      color: rgba(255, 255, 255, 0.9);
-      font-weight: bold;
-      margin-bottom: 20px;
-    }
-
-    .item button {
-      background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
-      color: var(--text-color);
-      border: none;
-      padding: 14px;
-      font-size: 1.2em;
-      cursor: pointer;
-      border-radius: var(--border-radius-md);
-      width: 100%;
-      transition: transform 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
-      font-family: 'Cairo', sans-serif;
-      font-weight: 700;
-      box-shadow: 0 4px 15px rgba(0, 255, 127, 0.4);
-    }
-
-    .item button:hover {
-      transform: scale(1.03);
-      background: linear-gradient(45deg, var(--secondary-color), var(--primary-color));
-      box-shadow: 0 6px 20px rgba(0, 255, 127, 0.6);
-    }
-
-    .item button:active {
-      transform: scale(0.98);
-      box-shadow: 0 2px 10px rgba(0, 255, 127, 0.2);
-    }
-
-    .added-animation {
-      animation: pulse 0.4s ease;
-    }
-
-    @keyframes pulse {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.08); }
-      100% { transform: scale(1); }
-    }
-
-    /* Item Availability Stamp */
-    .stamp {
-      position: absolute;
-      top: 15px;
-      right: 15px;
-      background: rgba(255, 215, 0, 0.9); /* Gold */
-      color: black;
-      padding: 6px 12px;
-      font-size: 13px;
-      font-weight: bold;
-      border-radius: 6px;
-      box-shadow: 0 3px 8px rgba(255, 215, 0, 0.6);
-      z-index: 10;
-      transform: rotate(3deg);
-    }
-
-    .stamp.unavailable {
-      background: var(--red-alert);
-      color: var(--text-color);
-      box-shadow: 0 3px 8px rgba(255, 0, 0, 0.6);
-    }
-
-    .item button.disabled {
-      background: rgba(100, 100, 100, 0.5);
-      cursor: not-allowed;
-      box-shadow: none;
-      transform: none;
-    }
-
-    .item button.disabled:hover {
-      background: rgba(100, 100, 100, 0.5);
-      transform: none;
-      box-shadow: none;
-    }
-
-    /* Footer */
-    .footer {
-      text-align: center;
-      padding: 40px 20px;
-      margin-top: 50px;
-      background: rgba(0, 0, 0, 0.2);
-      border-top: 1px solid rgba(0, 255, 127, 0.2);
-      border-radius: var(--border-radius-md);
-      font-size: 0.95em;
-      color: rgba(255, 255, 255, 0.7);
-    }
-
-    .footer p {
-      margin-bottom: 10px;
-    }
-
-    .footer .social-icons a {
-      color: var(--text-color);
-      font-size: 1.5em;
-      margin: 0 10px;
-      transition: color 0.3s ease;
-    }
-
-    .footer .social-icons a:hover {
-      color: var(--primary-color);
-    }
-
-    /* Utility Classes */
-    .visually-hidden {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      margin: -1px;
-      padding: 0;
-      overflow: hidden;
-      clip: rect(0, 0, 0, 0);
-      border: 0;
-    }
-
-    /* --- New styles for Popup Modal --- */
-    .item-details-modal-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.7);
-      backdrop-filter: blur(8px);
-      z-index: 1060; /* Higher than sidebar/cart */
-      opacity: 0;
-      visibility: hidden;
-      transition: opacity 0.3s ease, visibility 0.3s ease;
-    }
-
-    .item-details-modal-overlay.active {
-      opacity: 1;
-      visibility: visible;
-    }
-
-    .item-details-modal {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%) scale(0.9);
-      background: var(--dark-bg);
-      border-radius: var(--border-radius-md);
-      box-shadow: 0 10px 30px rgba(0, 255, 127, 0.5);
-      z-index: 1070;
-      width: 90%;
-      max-width: 500px;
-      opacity: 0;
-      visibility: hidden;
-      transition: transform 0.3s ease-out, opacity 0.3s ease-out, visibility 0.3s ease;
-      display: flex;
-      flex-direction: column;
-      text-align: right; /* RTL */
-      border: 2px solid var(--primary-color);
-    }
-
-    .item-details-modal.active {
-      transform: translate(-50%, -50%) scale(1);
-      opacity: 1;
-      visibility: visible;
-    }
-
-    .modal-content {
-      padding: 30px;
-      overflow-y: auto;
-      max-height: 80vh;
-      color: var(--text-color);
-    }
-
-    .modal-content h3 {
-      font-size: 2em;
-      margin-bottom: 20px;
-      color: var(--primary-color);
-      text-align: center;
-      border-bottom: 2px solid var(--secondary-color);
-      padding-bottom: 10px;
-    }
-
-    .modal-content p {
-      margin-bottom: 12px;
-      font-size: 1.1em;
-      display: flex;
-      justify-content: flex-end; /* Align text to the right for RTL */
-      align-items: center;
-      gap: 10px;
-    }
-
-    .modal-content p strong {
-      color: var(--primary-color);
-      min-width: 80px; /* Ensure labels align */
-      text-align: left; /* Align strong labels to the left */
-    }
-
-    .modal-content ul {
-      list-style: none;
-      padding: 0;
-      margin-top: 15px;
-      border-top: 1px dashed rgba(255, 255, 255, 0.2);
-      padding-top: 15px;
-    }
-    
-    .modal-content ul li {
-        margin-bottom: 8px;
-        color: rgba(255, 255, 255, 0.9);
-        display: flex;
-        justify-content: flex-end;
-        align-items: center;
-        gap: 8px;
-    }
-
-    .modal-content ul li i {
-        color: var(--primary-color);
-        font-size: 0.9em;
-    }
-
-    .close-details-btn {
-      position: absolute;
-      top: 10px;
-      left: 10px; /* Position to the left for RTL */
-      background: var(--red-alert);
-      color: var(--text-color);
-      border: none;
-      border-radius: 50%;
-      width: 35px;
-      height: 35px;
-      font-size: 20px;
-      line-height: 35px;
-      padding: 0;
-      cursor: pointer;
-      transition: transform 0.2s ease, background 0.2s ease;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-    }
-
-    .close-details-btn:hover {
-      background: rgba(255, 0, 0, 0.9);
-      transform: scale(1.1);
-    }
-
-    .add-to-cart-from-modal {
-        background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
-        color: var(--text-color);
-        border: none;
-        padding: 14px;
-        font-size: 1.2em;
-        cursor: pointer;
-        border-radius: var(--border-radius-md);
-        width: 100%;
-        margin-top: 20px;
-        transition: transform 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
-        font-family: 'Cairo', sans-serif;
-        font-weight: 700;
-        box-shadow: 0 44px 15px rgba(0, 255, 127, 0.4);
-    }
-
-    .add-to-cart-from-modal:hover {
-        transform: scale(1.02);
-        background: linear-gradient(45deg, var(--secondary-color), var(--primary-color));
-        box-shadow: 0 6px 20px rgba(0, 255, 127, 0.6);
-    }
-
-    /* Responsive Adjustments */
-    @media (max-width: 992px) { /* Adjust for 2 items per row on medium screens */
-        .item {
-            flex: 1 1 calc(50% - 10px); /* 2 items per row (20px gap / 2 = 10px per item) */
-            max-width: calc(50% - 10px);
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MatrixMuf</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4CAF50;
+            --primary-light: #80e27e;
+            --primary-dark: #087f23;
+            --secondary-color: #FFFFFF;
+            --text-color: #333333;
+            --text-light: #666666;
+            --background-light: #f8f9fa;
+            --background-dark: #121212;
+            --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --hover-green: #388E3C;
+            --font-family-cairo: 'Cairo', sans-serif;
+            --transition: all 0.3s ease;
         }
-    }
 
-    @media (max-width: 768px) {
-      .header h1 {
-        font-size: 2.8em;
-      }
+        body.dark-mode {
+            --text-color: #e0e0e0;
+            --text-light: #b0b0b0;
+            --background-light: var(--background-dark);
+            --card-shadow: 0 4px 15px rgba(0, 255, 0, 0.15);
+            background-color: var(--background-dark);
+        }
 
-      .fixed-action-buttons {
-        top: 15px;
-        left: 15px;
-        gap: 10px;
-      }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-      .cart-icon, .sidebar-toggle {
-        font-size: 22px;
-        padding: 10px 15px;
-      }
-      
-      .cart-badge {
-        font-size: 12px;
-        min-width: 20px;
-        height: 20px;
-        top: -5px; /* Adjusted for smaller screens on icon */
-        right: -5px; /* Adjusted for smaller screens on icon */
-      }
+        body {
+            font-family: var(--font-family-cairo);
+            background-color: var(--background-light);
+            color: var(--text-color);
+            direction: rtl;
+            text-align: right;
+            transition: background-color 0.3s, color 0.3s;
+            overflow-x: hidden;
+            position: relative;
+            line-height: 1.6;
+        }
 
-      .sidebar {
-        width: 220px;
-        right: -240px;
-      }
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.03;
+            background: 
+                linear-gradient(45deg, var(--primary-color) 25%, transparent 25%), 
+                linear-gradient(-45deg, var(--primary-color) 25%, transparent 25%), 
+                linear-gradient(45deg, transparent 75%, var(--primary-color) 75%), 
+                linear-gradient(-45deg, transparent 75%, var(--primary-color) 75%);
+            background-size: 20px 20px;
+            background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+            animation: moveBg 25s linear infinite;
+        }
 
-      .sidebar.active {
-        right: 0;
-      }
+        @keyframes moveBg {
+            0% { background-position: 0 0, 0 10px, 10px -10px, -10px 0px; }
+            100% { background-position: 40px 40px, 40px 50px, 50px 30px, 30px 40px; }
+        }
 
-      .sidebar button.menu-item {
-        font-size: 1em;
-        padding: 12px;
-      }
+        .dark-mode .animated-bg {
+            opacity: 0.02;
+        }
 
-      .cart {
-        width: 90%;
-        right: 5%;
-        top: 75px;
-      }
+        a {
+            text-decoration: none;
+            color: var(--primary-color);
+            transition: var(--transition);
+        }
 
-      .item {
-        /* Take full width on small screens (1 item per row) */
-        flex: 1 1 100%;
-        max-width: 100%;
-        min-width: unset; /* Allow it to shrink if needed, but flex: 1 1 100% is primary */
-      }
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 5%;
+            background-color: var(--secondary-color);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            transition: var(--transition);
+        }
 
-      .section-title {
-        font-size: 2em;
-        margin-bottom: 20px;
-      }
+        .dark-mode .navbar {
+            background-color: #1a1a1a;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
 
-      .item-details-modal {
-        width: 95%;
-        max-width: unset;
-      }
+        .logo {
+            font-size: 26px;
+            font-weight: 800;
+            color: var(--primary-color);
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+        }
 
-      .modal-content {
-        padding: 20px;
-      }
+        .logo:hover {
+            transform: scale(1.03);
+        }
 
-      .modal-content h3 {
-        font-size: 1.8em;
-      }
+        .logo i {
+            font-size: 28px;
+        }
 
-      .modal-content p {
-        font-size: 1em;
-        flex-direction: column; /* Stack details vertically on small screens */
-        align-items: flex-end;
-      }
+        .nav-icons {
+            list-style: none;
+            display: flex;
+            gap: 20px;
+        }
 
-      .modal-content p strong {
-        text-align: right;
-        min-width: unset;
-      }
-    }
+        .nav-icons a {
+            color: var(--text-color);
+            font-size: 18px;
+            transition: var(--transition);
+            display: block;
+            position: relative;
+            padding: 8px;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
-    @media (max-width: 480px) {
-      .header h1 {
-        font-size: 2.2em;
-      }
+        .nav-icons a:hover {
+            color: var(--primary-color);
+            background-color: rgba(76, 175, 80, 0.1);
+            transform: translateY(-2px);
+        }
 
-      .fixed-action-buttons {
-        top: 10px;
-        left: 10px;
-        flex-direction: row; /* Keep row for small screens, as cart/menu are side by side */
-        align-items: flex-start;
-      }
+        .nav-icons a::after {
+            content: attr(title);
+            position: absolute;
+            bottom: -35px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--primary-color);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            opacity: 0;
+            transition: var(--transition);
+            pointer-events: none;
+            white-space: nowrap;
+        }
 
-      .cart-icon, .sidebar-toggle {
-        font-size: 20px;
-        padding: 8px 12px;
-      }
+        .nav-icons a:hover::after {
+            opacity: 1;
+            bottom: -40px;
+        }
 
-      .cart-badge {
-        top: -3px; /* Adjusted for very small screens */
-        right: -3px; /* Adjusted for very small screens */
-      }
+        .main-content {
+            padding: 40px 5%;
+            text-align: center;
+            position: relative;
+        }
 
-      .sidebar {
-        width: 100%; /* Full width on very small screens */
-        right: -100%;
-        border-radius: 0;
-      }
+        .main-content h1 {
+            font-size: 40px;
+            margin-bottom: 12px;
+            color: var(--primary-color);
+            font-weight: 800;
+            position: relative;
+            display: inline-block;
+        }
 
-      .sidebar.active {
-        right: 0;
-      }
+        .main-content h1::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            right: 0;
+            width: 50%;
+            height: 3px;
+            background: linear-gradient(to right, var(--primary-color), transparent);
+            border-radius: 2px;
+        }
 
-      .cart {
-        top: 60px;
-        width: 95%;
-        right: 2.5%;
-        padding: 15px;
-      }
+        .slogan {
+            font-size: 18px;
+            margin-bottom: 40px;
+            color: var(--text-light);
+            font-weight: 500;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
 
-      .item {
-        width: 95%;
-        padding: 15px;
-      }
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 25px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
 
-      .item h3 {
-        font-size: 1.4em;
-      }
+        .card {
+            background-color: var(--secondary-color);
+            padding: 30px 20px;
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            text-align: center;
+            transition: var(--transition);
+            cursor: pointer;
+            border: 1px solid rgba(76, 175, 80, 0.1);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 180px;
+        }
 
-      .item p {
-        font-size: 1em;
-      }
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(to left, var(--primary-color), var(--primary-light));
+            transform: translateX(100%);
+            transition: transform 0.4s ease;
+        }
 
-      .item button {
-        padding: 12px;
-        font-size: 1.1em;
-      }
+        .dark-mode .card {
+            background-color: #1e1e1e;
+            border: 1px solid rgba(76, 175, 80, 0.15);
+        }
 
-      .close-details-btn {
-        width: 30px;
-        height: 30px;
-        font-size: 18px;
-        line-height: 30px;
-      }
-    }
-  </style>
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 20px rgba(76, 175, 80, 0.2);
+        }
 
+        .card:hover::before {
+            transform: translateX(0);
+        }
+
+        .card:hover h2, .card:hover .card-icon {
+            color: var(--primary-color);
+        }
+
+        .card-icon {
+            font-size: 46px;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            transition: var(--transition);
+        }
+
+        .card:hover .card-icon {
+            animation: bounce 0.5s ease;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        .card h2 {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text-color);
+            transition: var(--transition);
+        }
+
+        .dark-mode .card h2 {
+            color: #e0e0e0;
+        }
+
+        .footer {
+            padding: 25px 5%;
+            background-color: #1a1a1a;
+            color: #aaaaaa;
+            text-align: center;
+            font-size: 14px;
+            border-top: 4px solid var(--primary-color);
+            margin-top: 60px;
+        }
+
+        .footer p {
+            margin: 5px 0;
+        }
+
+        .copyright-team {
+            font-weight: 700;
+            color: var(--primary-color);
+            font-size: 15px;
+            margin-top: 8px;
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 16px;
+            background-color: rgba(76, 175, 80, 0.1);
+            transition: var(--transition);
+        }
+
+        .copyright-team:hover {
+            background-color: rgba(76, 175, 80, 0.15);
+        }
+
+        @media (max-width: 1200px) {
+            .cards-container {
+                grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+                gap: 22px;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .navbar {
+                padding: 12px 4%;
+            }
+            
+            .main-content {
+                padding: 35px 4%;
+            }
+            
+            .main-content h1 {
+                font-size: 36px;
+            }
+            
+            .slogan {
+                font-size: 17px;
+            }
+            
+            .cards-container {
+                grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 10px 4%;
+            }
+            
+            .logo {
+                font-size: 24px;
+            }
+            
+            .logo i {
+                font-size: 26px;
+            }
+            
+            .nav-icons {
+                gap: 15px;
+            }
+            
+            .nav-icons a {
+                font-size: 17px;
+                width: 38px;
+                height: 38px;
+            }
+            
+            .main-content {
+                padding: 30px 4%;
+            }
+            
+            .main-content h1 {
+                font-size: 32px;
+            }
+            
+            .slogan {
+                font-size: 16px;
+                margin-bottom: 35px;
+            }
+            
+            .cards-container {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 18px;
+            }
+            
+            .card {
+                padding: 25px 15px;
+                min-height: 160px;
+            }
+            
+            .card-icon {
+                font-size: 42px;
+                margin-bottom: 12px;
+            }
+            
+            .card h2 {
+                font-size: 20px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .navbar {
+                padding: 10px 5%;
+            }
+            
+            .logo {
+                font-size: 22px;
+            }
+            
+            .logo i {
+                font-size: 24px;
+            }
+            
+            .nav-icons {
+                gap: 12px;
+            }
+            
+            .nav-icons a {
+                font-size: 16px;
+                width: 36px;
+                height: 36px;
+            }
+            
+            .main-content {
+                padding: 25px 5%;
+            }
+            
+            .main-content h1 {
+                font-size: 28px;
+            }
+            
+            .slogan {
+                font-size: 15px;
+                margin-bottom: 30px;
+            }
+            
+            .cards-container {
+                grid-template-columns: 1fr;
+                gap: 15px;
+                max-width: 300px;
+            }
+            
+            .card {
+                padding: 22px 15px;
+                min-height: 150px;
+            }
+            
+            .footer {
+                padding: 20px 5%;
+                margin-top: 50px;
+            }
+        }
+
+        @media (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
+            .cards-container {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 2px;
+            background: linear-gradient(to right, var(--primary-color), var(--primary-light);
+            z-index: 1001;
+            transition: width 0.3s ease;
+        }
+    </style>
 </head>
 <body>
+    <div class="animated-bg"></div>
+    <div class="progress-bar"></div>
 
-  <div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleSidebar()"></div>
-
-  <aside class="sidebar" id="sidebar" aria-label="قائمة التنقل الرئيسية">
-    <button class="close-btn" onclick="toggleSidebar()" aria-label="إغلاق القائمة">
-      <i class="fas fa-times"></i>
-    </button>
-    <button class="menu-item" onclick="showSection('all-products'); toggleSidebar();">
-      <i class="fas fa-th-large"></i> جميع المنتجات
-    </button>
-    <button class="menu-item" onclick="showSection('realms'); toggleSidebar();">
-      <i class="fas fa-gem"></i> الريلمات
-    </button>
-    <button class="menu-item" onclick="showSection('coins'); toggleSidebar();">
-      <i class="fas fa-coins"></i> الكوينزات
-    </button>
-    <button class="menu-item" onclick="showSection('accounts'); toggleSidebar();">
-      <i class="fas fa-user-circle"></i> الحسابات
-    </button>
-    <button class="menu-item" onclick="showSection('ranks'); toggleSidebar();">
-      <i class="fas fa-medal"></i> الرانكات
-    </button>
-    <button class="menu-item" onclick="showSection('packs'); toggleSidebar();">
-      <i class="fas fa-box-open"></i> الحزم
-    </button>
-    <button class="menu-item" onclick="showSection('servers'); toggleSidebar();">
-      <i class="fas fa-server"></i> السيرفرات
-    </button>
-  </aside>
-
-  <div class="fixed-action-buttons">
-    <div class="cart-icon" onclick="toggleCart()" role="button" aria-controls="cart" aria-expanded="false" id="cart-icon">
-      <i class="fas fa-shopping-cart"></i> السلة
-      <span class="cart-badge" id="cart-badge">0</span> </div>
-    <div class="sidebar-toggle" onclick="toggleSidebar()" role="button" aria-controls="sidebar" aria-expanded="false" id="sidebar-toggle">
-      <i class="fas fa-bars"></i> القائمة
-    </div>
-  </div>
-
-  <div class="cart-overlay" id="cart-overlay" onclick="toggleCart()"></div>
-
-  <div class="cart" id="cart" aria-label="سلة المشتريات">
-    <button class="close-cart" onclick="toggleCart()" aria-label="إغلاق سلة المشتريات">
-      <i class="fas fa-times"></i>
-    </button>
-    <h3>سلة المشتريات</h3>
-    <ul id="cart-list">
-      </ul>
-    <p id="empty-cart-message">سلة المشتريات فارغة.</p>
-    <p id="total-price">المجموع: $0.00</p>
-    <div class="checkout-buttons">
-      <a href="#" id="telegram-checkout" target="_blank" class="checkout-button">
-        <i class="fab fa-telegram-plane"></i> إتمام الطلب عبر تيليجرام
-      </a>
-      <a href="#" id="whatsapp-checkout" target="_blank" class="checkout-button whatsapp">
-        <i class="fab fa-whatsapp"></i> إتمام الطلب عبر واتساب
-      </a>
-    </div>
-  </div>
-
-  <main class="container">
-    <header class="header">
-      <h1>متجر حكومه</h1>
-      <p>وجهتك الأولى لحسابات، كوينزات، وريلمات ماين كرافت عالية الجودة</p>
+    <header class="navbar">
+        <div class="logo">
+            <i class="fas fa-cube"></i>
+            MatrixMuf
+        </div>
+        <nav>
+            <ul class="nav-icons">
+                <li><a href="profile.html" title="بروفايل"><i class="fas fa-user"></i></a></li>
+                <li><a href="#" id="dark-mode-toggle" title="وضع داكن"><i class="fas fa-moon"></i></a></li>
+                <li><a href="support.html" title="دعم فني"><i class="fas fa-headset"></i></a></li>
+            </ul>
+        </nav>
     </header>
 
-    <div id="products-container" class="section active">
-      <h2 class="section-title">جميع المنتجات</h2>
-      </div>
+    <main class="main-content">
+        <h1> MatrixMuf </h1>
+        <p class="slogan">Leave the driving to us and enjoy! </p>
 
-    <div id="realms-section" class="section">
-      <h2 class="section-title">الريلمات</h2>
-    </div>
-    <div id="coins-section" class="section">
-      <h2 class="section-title">الكوينزات</h2>
-    </div>
-    <div id="accounts-section" class="section">
-      <h2 class="section-title">الحسابات</h2>
-    </div>
-    <div id="ranks-section" class="section">
-      <h2 class="section-title">الرانكات</h2>
-    </div>
-    <div id="packs-section" class="section">
-      <h2 class="section-title">الحزم</h2>
-    </div>
-    <div id="servers-section" class="section">
-      <h2 class="section-title">السيرفرات</h2>
-    </div>
-  </main>
+        <section class="cards-container">
+            <a href="mods.html" class="card">
+                <i class="fas fa-puzzle-piece card-icon"></i>
+                <h2>مودات</h2>
+            </a>
+            <a href="ss.html" class="card">
+                <i class="fas fa-history card-icon"></i>
+                <h2>إصدارات</h2>
+            </a>
+            <a href="upload.html" class="card">
+                <i class="fas fa-cloud-upload-alt card-icon"></i>
+                <h2>رفع مود</h2>
+            </a>
+            <a href="launcher.html" class="card">
+                <i class="fas fa-rocket card-icon"></i>
+                <h2>Launcher</h2>
+            </a>
+        </section>
+    </main>
 
-  <footer class="footer">
-    <p>&copy; <span id="current-year"></span> متجر حكومه. جميع الحقوق محفوظة.</p>
-    <p>للتواصل والدعم الفني:</p>
-    <div class="social-icons">
-      <a href="https://t.me/iq_CRAFT" target="_blank" aria-label="قناتنا على تيليجرام"><i class="fab fa-telegram-plane"></i></a>
-           <a href="https://wa.me/+9647781356002" target="_blank" aria-label="تواصل معنا على واتساب"><i class="fab fa-whatsapp"></i></a>
-      </div>
-  </footer>
+    <footer class="footer">
+        <p>&copy; 2025 MatrixMuf. جميع الحقوق محفوظة.</p>
+        <p class="copyright-team">تمت البرمجة بواسطة فريق MatrixMuf IRAQ</p>
+    </footer>
 
-  <audio id="add-sound" src="https://cdn.pixabay.com/audio/2022/03/15/audio_d7b6d4cdb9.mp3" preload="auto"></audio>
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-analytics.js";
+        // TODO: Add SDKs for Firebase products that you want to use
+        // https://firebase.google.com/docs/web/setup#available-libraries
 
-  <div class="item-details-modal-overlay" id="item-details-modal-overlay" onclick="closeItemDetails()"></div>
-  <div class="item-details-modal" id="item-details-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
-    <button class="close-details-btn" onclick="closeItemDetails()" aria-label="إغلاق التفاصيل">
-      <i class="fas fa-times"></i>
-    </button>
-    <div class="modal-content">
-      <h3 id="modal-title">تفاصيل المنتج</h3>
-      <img id="modal-image" src="" alt="صورة المنتج" style="width: 100%; height: 200px; object-fit: cover; border-radius: var(--border-radius-sm); margin-bottom: 20px;">
-      <p><strong>الاسم:</strong> <span id="modal-name"></span></p>
-      <p><strong>السعر:</strong> <span id="modal-price"></span></p>
-      <div id="modal-specific-details">
-        </div>
-      <p><strong>الوصف:</strong> <span id="modal-description"></span></p>
-      <button class="add-to-cart-from-modal" id="add-to-cart-from-modal" onclick="addToCartFromModal()">إضافة للسلة</button>
-    </div>
-  </div>
+        // Your web app's Firebase configuration
+        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+        const firebaseConfig = {
+            apiKey: "AIzaSyDgqgIdXgZflmPT4z3IcaIzg6f7BxLEvyE",
+            authDomain: "matrixmodadd.firebaseapp.com",
+            databaseURL: "https://matrixmodadd-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "matrixmodadd",
+            storageBucket: "matrixmodadd.firebasestorage.app",
+            messagingSenderId: "67540662652",
+            appId: "1:67540662652:web:0c597e33134bccf89accf9",
+            measurementId: "G-QQ6FDGTSR5"
+        };
 
-  <script>
-    let cart = [];
-    const cartList = document.getElementById("cart-list");
-    const totalPriceElement = document.getElementById("total-price");
-    const cartBadge = document.getElementById("cart-badge");
-    const emptyCartMessage = document.getElementById("empty-cart-message");
-    const addSound = document.getElementById('add-sound');
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+    </script>
 
-    // عناصر نافذة تفاصيل المنتج المنبثقة (Popup Modal Elements)
-    const itemDetailsModal = document.getElementById('item-details-modal');
-    const itemDetailsModalOverlay = document.getElementById('item-details-modal-overlay');
-    const modalTitle = document.getElementById('modal-title');
-    const modalImage = document.getElementById('modal-image');
-    const modalName = document.getElementById('modal-name');
-    const modalPrice = document.getElementById('modal-price');
-    const modalDescription = document.getElementById('modal-description');
-    const modalSpecificDetails = document.getElementById('modal-specific-details');
-    const addToCartModalBtn = document.getElementById('add-to-cart-from-modal');
-    let currentItemData = null; // لتخزين بيانات العنصر المعروض حاليًا في النافذة المنبثقة
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const darkModeToggle = document.getElementById('dark-mode-toggle');
+            const body = document.body;
+            const progressBar = document.querySelector('.progress-bar');
 
-    // متغير عام لتخزين جميع المنتجات التي تم جلبها من Firebase
-    let allProducts = [];
-
-    // مراجع لأقسام عرض المنتجات في HTML
-    const productsContainer = document.getElementById('products-container');
-    const realmsSection = document.getElementById('realms-section');
-    const coinsSection = document.getElementById('coins-section');
-    const accountsSection = document.getElementById('accounts-section');
-    // أقسام جديدة
-    const ranksSection = document.getElementById('ranks-section');
-    const packsSection = document.getElementById('packs-section');
-    const serversSection = document.getElementById('servers-section');
-
-    // استبدل بـ اسم مستخدم تيليجرام ورقم واتساب الخاص بك
-    const telegramUsername = 'iq_CRAFT'; 
-    const whatsappNumber = '+9647781356002'; 
-    
-
-    // عند تحميل الصفحة، نقوم بجلب المنتجات من Firebase أولاً
-    document.addEventListener('DOMContentLoaded', async () => {
-      // تحميل محتويات السلة من الذاكرة المحلية للمتصفح
-      loadCartFromLocalStorage();
-      updateCartDisplay();
-      updateCartBadge();
-      setCurrentYear();
-
-      // جلب المنتجات من Firebase عند اكتمال تحميل DOM
-      await fetchProducts();
-      
-      // إعداد أزرار إتمام الطلب (تيليجرام وواتساب)
-      document.getElementById('telegram-checkout').addEventListener('click', (e) => {
-        e.preventDefault();
-        sendOrderToTelegram();
-      });
-      document.getElementById('whatsapp-checkout').addEventListener('click', (e) => {
-        e.preventDefault();
-        sendOrderToWhatsApp();
-      });
-    });
-
-    // تحديث السنة الحالية في التذييل
-    function setCurrentYear() {
-      document.getElementById('current-year').textContent = new Date().getFullYear();
-    }
-
-    // تبديل إظهار وإخفاء القائمة الجانبية
-    function toggleSidebar() {
-      const sidebar = document.getElementById("sidebar");
-      const overlay = document.getElementById("sidebar-overlay");
-      sidebar.classList.toggle("active");
-      overlay.classList.toggle("active");
-      document.getElementById("sidebar-toggle").setAttribute("aria-expanded", sidebar.classList.contains("active"));
-    }
-
-    // تبديل إظهار وإخفاء سلة المشتريات
-    function toggleCart() {
-      const cartDiv = document.getElementById("cart");
-      const overlay = document.getElementById("cart-overlay");
-      cartDiv.classList.toggle("active");
-      overlay.classList.toggle("active");
-      document.getElementById("cart-icon").setAttribute("aria-expanded", cartDiv.classList.contains("active"));
-    }
-
-    // --- وظائف التكامل مع Firebase Realtime Database ---
-
-    // دالة لجلب المنتجات من Realtime Database
-    async function fetchProducts() {
-        try {
-            const productsRef = database.ref('products');
-            productsRef.once('value', (snapshot) => {
-                const productsData = snapshot.val(); 
-                allProducts = [];
-
-                if (productsData) {
-                    for (const key in productsData) {
-                        if (Object.hasOwnProperty.call(productsData, key)) {
-                            allProducts.push({
-                                id: key, 
-                                ...productsData[key] 
-                            });
-                        }
-                    }
-                }
-                
-                console.log("Products fetched from Realtime Database:", allProducts); 
-                displayProducts(allProducts); 
-                showSection('all-products'); 
-            });
-        } catch (error) {
-            console.error("Error fetching products from Realtime Database:", error);
-            showNotification("حدث خطأ أثناء جلب المنتجات. حاول مرة أخرى.", 'error');
-        }
-    }
-
-    // دالة لعرض المنتجات ديناميكيًا في الأقسام الصحيحة
-    function displayProducts(productsToDisplay) {
-        // مسح المنتجات الموجودة حاليًا من جميع الأقسام لتجنب التكرار
-        productsContainer.innerHTML = '<h2 class="section-title">جميع المنتجات</h2>';
-        realmsSection.innerHTML = '<h2 class="section-title">الريلمات</h2>';
-        coinsSection.innerHTML = '<h2 class="section-title">الكوينزات</h2>';
-        accountsSection.innerHTML = '<h2 class="section-title">الحسابات</h2>';
-        // مسح الأقسام الجديدة
-        ranksSection.innerHTML = '<h2 class="section-title">الرانكات</h2>';
-        packsSection.innerHTML = '<h2 class="section-title">الحزم</h2>';
-        serversSection.innerHTML = '<h2 class="section-title">السيرفرات</h2>';
-
-        productsToDisplay.forEach(product => {
-            // إنشاء كود HTML لكل منتج
-            const itemHtml = `
-                <div class="item" 
-                     data-id="${product.id}"
-                     data-category="${product.category}" 
-                     data-name="${product.name}" 
-                     data-price="${product.price}" 
-                     data-image="${product.image}"
-                     data-details="${product.details || ''}"
-                     ${product.duration ? `data-duration="${product.duration}"` : ''}
-                     ${product.players ? `data-players="${product.players}"` : ''}
-                     ${product.features ? `data-features="${product.features}"` : ''}
-                     ${product.coinAmount ? `data-coin-amount="${product.coinAmount}"` : ''}
-                     ${product.game ? `data-game="${product.game}"` : ''}
-                     ${product.accountType ? `data-account-type="${product.accountType}"` : ''}
-                     ${product.rankType ? `data-rank-type="${product.rankType}"` : ''}
-                     ${product.serverName ? `data-server-name="${product.serverName}"` : ''}
-                     ${product.packContents ? `data-pack-contents="${product.packContents}"` : ''}
-                     data-available="${product.available}">
-                    <span class="stamp ${product.available ? 'available' : 'unavailable'}">
-                        ${product.available ? 'متوفر' : 'غير متوفر'}
-                    </span>
-                    <img src="${product.image}" alt="${product.name}">
-                    <h3>${product.name}</h3>
-                    <p>السعر: $${parseFloat(product.price).toFixed(2)}</p>
-                    <button ${product.available ? '' : 'class="disabled" disabled'} onclick="addToCart(this); event.stopPropagation();">
-                        ${product.available ? 'إضافة للسلة' : 'غير متوفر'}
-                    </button>
-                </div>
-            `;
-            
-            // إضافة المنتج إلى قسم "جميع المنتجات"
-            productsContainer.insertAdjacentHTML('beforeend', itemHtml);
-
-            // إضافة المنتج إلى أقسام الفئات المحددة
-            if (product.category === 'realms') {
-                realmsSection.insertAdjacentHTML('beforeend', itemHtml);
-            } else if (product.category === 'coins') {
-                coinsSection.insertAdjacentHTML('beforeend', itemHtml);
-            } else if (product.category === 'accounts') {
-                accountsSection.insertAdjacentHTML('beforeend', itemHtml);
-            } else if (product.category === 'ranks') { // فئة جديدة
-                ranksSection.insertAdjacentHTML('beforeend', itemHtml);
-            } else if (product.category === 'packs') { // فئة جديدة
-                packsSection.insertAdjacentHTML('beforeend', itemHtml);
-            } else if (product.category === 'servers') { // فئة جديدة
-                serversSection.insertAdjacentHTML('beforeend', itemHtml);
+            const currentTheme = localStorage.getItem('theme');
+            if (currentTheme === 'dark') {
+                body.classList.add('dark-mode');
+                darkModeToggle.querySelector('i').classList.replace('fa-moon', 'fa-sun');
             }
-        });
 
-        // إضافة مستمع حدث النقر لفتح نافذة التفاصيل لكل عنصر منتج تم إنشاؤه حديثًا
-        document.querySelectorAll('.item').forEach(item => {
-            item.addEventListener('click', function(event) {
-                if (event.target.tagName !== 'BUTTON') {
-                    showItemDetails(this);
+            darkModeToggle.addEventListener('click', (e) => {
+                e.preventDefault();
+                body.classList.toggle('dark-mode');
+
+                const icon = darkModeToggle.querySelector('i');
+                if (body.classList.contains('dark-mode')) {
+                    icon.classList.replace('fa-moon', 'fa-sun');
+                    localStorage.setItem('theme', 'dark');
+                } else {
+                    icon.classList.replace('fa-sun', 'fa-moon');
+                    localStorage.setItem('theme', 'light');
                 }
             });
+
+            window.addEventListener('scroll', () => {
+                const windowHeight = window.innerHeight;
+                const documentHeight = document.documentElement.scrollHeight - windowHeight;
+                const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                const progress = (scrollTop / documentHeight) * 100;
+                progressBar.style.width = `${progress}%`;
+            });
         });
-    }
-
-    // --- نهاية وظائف التكامل مع Firebase Realtime Database ---
-
-    // إضافة منتج إلى السلة
-    function addToCart(buttonElement) {
-      const itemElement = buttonElement.closest('.item');
-      const id = itemElement.dataset.id; 
-      const name = itemElement.dataset.name;
-      const price = parseFloat(itemElement.dataset.price);
-      const image = itemElement.dataset.image;
-
-      const existingItemIndex = cart.findIndex(item => item.id === id); 
-
-      if (existingItemIndex > -1) {
-        cart[existingItemIndex].quantity++;
-      } else {
-        cart.push({ id, name, price, image, quantity: 1 }); 
-      }
-
-      saveCartToLocalStorage();
-      updateCartDisplay();
-      updateCartBadge();
-
-      if (addSound) {
-        addSound.currentTime = 0; 
-        addSound.play().catch(e => console.error("Audio play failed:", e));
-      }
-
-      buttonElement.classList.add('added-animation');
-      setTimeout(() => buttonElement.classList.remove('added-animation'), 400);
-
-      showNotification(`${name} تم إضافته إلى السلة!`);
-    }
-
-    // إضافة منتج إلى السلة من نافذة التفاصيل المنبثقة
-    function addToCartFromModal() {
-        if (!currentItemData) return;
-
-        const id = currentItemData.id; 
-        const name = currentItemData.name;
-        const price = parseFloat(currentItemData.price);
-        const image = currentItemData.image;
-
-        const existingItemIndex = cart.findIndex(item => item.id === id); 
-
-        if (existingItemIndex > -1) {
-            cart[existingItemIndex].quantity++;
-        } else {
-            cart.push({ id, name, price, image, quantity: 1 }); 
-        }
-
-        saveCartToLocalStorage();
-        updateCartDisplay();
-        updateCartBadge();
-
-        if (addSound) {
-            addSound.currentTime = 0;
-            addSound.play().catch(e => console.error("Audio play failed:", e));
-        }
-        showNotification(`${name} تم إضافته إلى السلة!`);
-        closeItemDetails(); 
-    }
-
-    // تحديث شارة عدد المنتجات في السلة
-    function updateCartBadge() {
-      const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-      cartBadge.textContent = totalItems;
-      cartBadge.classList.toggle('hidden', totalItems === 0);
-    }
-
-    // تحديث عرض المنتجات في السلة
-    function updateCartDisplay() {
-      if (cart.length === 0) {
-        emptyCartMessage.style.display = 'block';
-        cartList.innerHTML = '';
-      } else {
-        emptyCartMessage.style.display = 'none';
-        cartList.innerHTML = cart.map((item, index) => `
-          <li class="cart-item" data-index="${index}">
-            <span>${item.name} (${item.quantity}) - $${(item.price * item.quantity).toFixed(2)}</span>
-            <div class="quantity-controls">
-              <button onclick="changeQuantity(${index}, -1)" aria-label="تقليل الكمية"><i class="fas fa-minus"></i></button>
-              <span>${item.quantity}</span>
-              <button onclick="changeQuantity(${index}, 1)" aria-label="زيادة الكمية"><i class="fas fa-plus"></i></button>
-            </div>
-            <button class="remove-btn" onclick="removeFromCart(${index})" aria-label="إزالة العنصر">
-              <i class="fas fa-times"></i>
-            </button>
-          </li>
-        `).join('');
-      }
-
-      const total = cart.reduce((sum, i) => sum + (i.price * i.quantity), 0);
-      totalPriceElement.textContent = `المجموع: $${total.toFixed(2)}`;
-    }
-
-    // تغيير كمية المنتج في السلة
-    function changeQuantity(index, delta) {
-      if (cart[index]) {
-        cart[index].quantity += delta;
-        if (cart[index].quantity <= 0) {
-          removeFromCart(index);
-        } else {
-          saveCartToLocalStorage();
-          updateCartDisplay();
-          updateCartBadge();
-        }
-      }
-    }
-
-    // إزالة منتج من السلة
-    function removeFromCart(index) {
-      cart.splice(index, 1);
-      saveCartToLocalStorage();
-      updateCartDisplay();
-      updateCartBadge();
-    }
-
-    // حفظ السلة في الذاكرة المحلية للمتصفح (LocalStorage)
-    function saveCartToLocalStorage() {
-      localStorage.setItem('shoppingCart', JSON.stringify(cart));
-    }
-
-    // تحميل السلة من الذاكرة المحلية للمتصفح (LocalStorage)
-    function loadCartFromLocalStorage() {
-      const storedCart = localStorage.getItem('shoppingCart');
-      if (storedCart) {
-        cart = JSON.parse(storedCart);
-      }
-    }
-
-    // إظهار القسم المحدد من المنتجات
-    function showSection(id) {
-        document.querySelectorAll('.section').forEach(s => {
-            s.classList.remove('active');
-            s.style.display = 'none'; 
-        });
-
-        let activeSection;
-        // تحديد القسم النشط بناءً على الـ ID
-        if (id === 'all-products') {
-            activeSection = productsContainer; 
-        } else if (id === 'realms') {
-            activeSection = realmsSection;
-        } else if (id === 'coins') {
-            activeSection = coinsSection;
-        } else if (id === 'accounts') {
-            activeSection = accountsSection;
-        } else if (id === 'ranks') { // فئة جديدة
-            activeSection = ranksSection;
-        } else if (id === 'packs') { // فئة جديدة
-            activeSection = packsSection;
-        } else if (id === 'servers') { // فئة جديدة
-            activeSection = serversSection;
-        } else {
-            return; 
-        }
-
-        if (activeSection) {
-            activeSection.style.display = 'flex'; 
-            setTimeout(() => activeSection.classList.add('active'), 10); 
-            
-            const sectionTitle = activeSection.querySelector('.section-title');
-            if (sectionTitle) {
-                sectionTitle.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
-        }
-    }
-
-    // إظهار إشعارات للمستخدم
-    function showNotification(message, type = 'success') {
-      const notification = document.createElement('div');
-      notification.textContent = message;
-      notification.style.cssText = `
-        position: fixed;
-        bottom: 20px;
-        right: 20px;
-        background-color: ${type === 'success' ? 'var(--primary-color)' : 'var(--red-alert)'};
-        color: ${type === 'success' ? 'var(--dark-bg)' : 'var(--text-color)'};
-        padding: 12px 20px;
-        border-radius: var(--border-radius-md);
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
-        font-size: 1em;
-        z-index: 2000;
-        opacity: 0;
-        transform: translateY(20px);
-        transition: opacity 0.4s ease-out, transform 0.4s ease-out;
-        font-family: 'Tajawal', sans-serif;
-      `;
-      document.body.appendChild(notification);
-
-      setTimeout(() => {
-        notification.style.opacity = '1';
-        notification.style.transform = 'translateY(0)';
-      }, 50);
-
-      setTimeout(() => {
-        notification.style.opacity = '0';
-        notification.style.transform = 'translateY(20px)';
-        notification.addEventListener('transitionend', () => notification.remove());
-      }, 3000);
-    }
-
-    // إنشاء رسالة الطلب للتيليجرام والواتساب
-    function generateOrderMessage() {
-      if (cart.length === 0) {
-        return "مرحباً! أود الاستفسار عن المنتجات في متجركم.";
-      }
-
-      let message = "مرحباً! أود إتمام طلب للمنتجات التالية:\n\n";
-      cart.forEach((item, index) => {
-        message += `${index + 1}. ${item.name} - الكمية: ${item.quantity} - السعر: $${(item.price * item.quantity).toFixed(2)}\n`;
-      });
-      message += `\nالمجموع الكلي: $${cart.reduce((sum, i) => sum + (i.price * i.quantity), 0).toFixed(2)}\n\n`;
-      message += "الرجاء تزويدي بتفاصيل الدفع وإتمام الطلب. شكراً!";
-      return encodeURIComponent(message);
-    }
-
-    // إرسال الطلب عبر تيليجرام
-    function sendOrderToTelegram() {
-      const message = generateOrderMessage();
-      const telegramUrl = `https://t.me/${telegramUsername}?text=${message}`;
-      window.open(telegramUrl, '_blank');
-    }
-
-    // إرسال الطلب عبر واتساب
-    function sendOrderToWhatsApp() {
-      const message = generateOrderMessage();
-      const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${message}`;
-      window.open(whatsappUrl, '_blank');
-    }
-
-    // --- وظائف نافذة تفاصيل المنتج المنبثقة ---
-
-    // إظهار نافذة تفاصيل المنتج
-    function showItemDetails(itemElement) {
-        const productId = itemElement.dataset.id;
-        currentItemData = allProducts.find(p => p.id === productId);
-
-        if (!currentItemData) {
-            console.error("Product data not found for ID:", productId);
-            return;
-        }
-
-        modalTitle.textContent = currentItemData.name;
-        modalImage.src = currentItemData.image;
-        modalImage.alt = currentItemData.name;
-        modalName.textContent = currentItemData.name;
-        modalPrice.textContent = `$${parseFloat(currentItemData.price).toFixed(2)}`;
-        modalDescription.textContent = currentItemData.details || 'لا يوجد وصف متاح لهذا المنتج.';
-
-        modalSpecificDetails.innerHTML = ''; // مسح التفاصيل السابقة
-
-        // إضافة تفاصيل خاصة بناءً على فئة المنتج
-        if (currentItemData.category === 'realms') {
-            modalSpecificDetails.innerHTML += `
-                <p><i class="fas fa-clock"></i> <strong>المدة:</strong> <span>${currentItemData.duration || 'غير محدد'}</span></p>
-                <p><i class="fas fa-users"></i> <strong>عدد اللاعبين:</strong> <span>${currentItemData.players || 'غير محدد'}</span></p>
-                <p><i class="fas fa-gear"></i> <strong>ميزات إضافية:</strong> <span>${currentItemData.features || 'لا يوجد'}</span></p>
-            `;
-        } else if (currentItemData.category === 'coins') {
-            modalSpecificDetails.innerHTML += `
-                <p><i class="fas fa-coins"></i> <strong>الكمية:</strong> <span>${currentItemData.coinAmount || 'غير محدد'}</span></p>
-                <p><i class="fas fa-gamepad"></i> <strong>اللعبة:</strong> <span>${currentItemData.game || 'غير محدد'}</span></p>
-            `;
-        } else if (currentItemData.category === 'accounts') {
-            modalSpecificDetails.innerHTML += `
-                <p><i class="fas fa-tag"></i> <strong>نوع الحساب:</strong> <span>${currentItemData.accountType || 'غير محدد'}</span></p>
-                <p><i class="fas fa-list-check"></i> <strong>الميزات:</strong> <span>${currentItemData.features || 'لا يوجد'}</span></p>
-            `;
-        } else if (currentItemData.category === 'ranks') { // تفاصيل الرانكات
-            modalSpecificDetails.innerHTML += `
-                <p><i class="fas fa-star"></i> <strong>نوع الرانك:</strong> <span>${currentItemData.rankType || 'غير محدد'}</span></p>
-                <p><i class="fas fa-circle-info"></i> <strong>الفوائد:</strong> <span>${currentItemData.benefits || 'لا يوجد'}</span></p>
-            `;
-        } else if (currentItemData.category === 'packs') { // تفاصيل الحزم
-            modalSpecificDetails.innerHTML += `
-                <p><i class="fas fa-box"></i> <strong>محتويات الحزمة:</strong> <span>${currentItemData.packContents || 'غير محدد'}</span></p>
-                <p><i class="fas fa-layer-group"></i> <strong>الفئة:</strong> <span>${currentItemData.packCategory || 'غير محدد'}</span></p>
-            `;
-        } else if (currentItemData.category === 'servers') { // تفاصيل السيرفرات
-            modalSpecificDetails.innerHTML += `
-                <p><i class="fas fa-network-wired"></i> <strong>اسم السيرفر:</strong> <span>${currentItemData.serverName || 'غير محدد'}</span></p>
-                <p><i class="fas fa-globe"></i> <strong>نوع السيرفر:</strong> <span>${currentItemData.serverType || 'غير محدد'}</span></p>
-                <p><i class="fas fa-users-line"></i> <strong>سعة اللاعبين:</strong> <span>${currentItemData.maxPlayers || 'غير محدد'}</span></p>
-            `;
-        }
-
-        const isAvailable = currentItemData.available;
-        if (isAvailable) {
-            addToCartModalBtn.classList.remove('disabled');
-            addToCartModalBtn.disabled = false;
-            addToCartModalBtn.textContent = 'إضافة للسلة';
-        } else {
-            addToCartModalBtn.classList.add('disabled');
-            addToCartModalBtn.disabled = true;
-            addToCartModalBtn.textContent = 'غير متوفر';
-        }
-
-        itemDetailsModal.classList.add('active');
-        itemDetailsModalOverlay.classList.add('active');
-        document.body.style.overflow = 'hidden'; 
-    }
-
-    // إغلاق نافذة تفاصيل المنتج
-    function closeItemDetails() {
-        itemDetailsModal.classList.remove('active');
-        itemDetailsModalOverlay.classList.remove('active');
-        document.body.style.overflow = ''; 
-        currentItemData = null; 
-    }
-
-  </script>
+    </script>
 </body>
 </html>

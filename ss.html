@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إصدارات ماين كرافت - MatrixMuf</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* =========================================================================
+           1. المتغيرات والتنسيق الأساسي (Base & Variables)
+           ========================================================================= */
+
+        :root {
+            /* الألوان الأساسية */
+            --primary-color: #4CAF50; /* الأخضر الأساسي */
+            --primary-light: #80e27e;
+            --primary-dark: #087f23;
+            --secondary-color: #FFFFFF; /* لون الخلفية الفاتح */
+            
+            /* ألوان النصوص */
+            --text-color: #333333;
+            --text-light: #666666;
+            
+            /* الخلفيات */
+            --background-light: #f8f9fa;
+            --background-dark: #121212;
+            
+            /* التأثيرات والحدود */
+            --card-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.08); /* استخدام rem */
+            --transition: all 0.3s ease;
+            
+            /* الخطوط ووحدات القياس */
+            --font-family-cairo: 'Cairo', sans-serif;
+            --base-font-size: 16px; /* أساس rem */
+        }
+
+        /* وضع الظلام (Dark Mode) */
+        body.dark-mode {
+            --text-color: #e0e0e0;
+            --text-light: #b0b0b0;
+            --secondary-color: #1e1e1e;
+            --background-light: var(--background-dark);
+            --card-shadow: 0 0.25rem 1rem rgba(0, 255, 0, 0.15);
+            background-color: var(--background-dark);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            font-size: var(--base-font-size); /* تحديد حجم الخط الأساسي للـ rem */
+        }
+
+        body {
+            font-family: var(--font-family-cairo);
+            background-color: var(--background-light);
+            color: var(--text-color);
+            direction: rtl;
+            text-align: right;
+            transition: background-color 0.3s, color 0.3s;
+            overflow-x: hidden;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            line-height: 1.6;
+        }
+
+        a {
+            text-decoration: none;
+            color: var(--primary-color);
+            transition: var(--transition);
+        }
+
+        /* =========================================================================
+           2. الخلفية المتحركة وشريط التقدم
+           ========================================================================= */
+
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.03;
+            /* نمط الخلفية المتحركة */
+            background: 
+                repeating-linear-gradient(45deg, var(--primary-color) 0, var(--primary-color) 0.5rem, transparent 0.5rem, transparent 1rem), 
+                repeating-linear-gradient(-45deg, var(--primary-color) 0, var(--primary-color) 0.5rem, transparent 0.5rem, transparent 1rem);
+            background-size: 2.5rem 2.5rem; /* استخدام rem */
+            animation: moveBg 35s linear infinite;
+        }
+
+        @keyframes moveBg {
+            0% { background-position: 0 0; }
+            100% { background-position: 5rem 5rem; } /* استخدام rem */
+        }
+
+        .dark-mode .animated-bg {
+            opacity: 0.015;
+        }
+
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 0.25rem; /* استخدام rem */
+            background: linear-gradient(to right, var(--primary-color), var(--primary-light));
+            z-index: 1001;
+            transition: width 0.15s ease-out; /* تسريع الانتقال */
+        }
+
+        /* =========================================================================
+           3. شريط التنقل (Navbar)
+           ========================================================================= */
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 5%; /* استخدام rem و % */
+            background-color: var(--secondary-color);
+            box-shadow: 0 0.125rem 0.625rem rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            transition: var(--transition);
+        }
+
+        .dark-mode .navbar {
+            background-color: #1a1a1a;
+            box-shadow: 0 0.125rem 0.625rem rgba(0, 0, 0, 0.3);
+        }
+
+        .logo {
+            font-size: 1.625rem; /* استخدام rem */
+            font-weight: 800;
+            color: var(--primary-color);
+            gap: 0.5rem;
+        }
+
+        .logo i {
+            font-size: 1.75rem; /* استخدام rem */
+        }
+
+        .nav-icons {
+            list-style: none;
+            display: flex;
+            gap: 1.25rem; /* استخدام rem */
+        }
+
+        .nav-icons a {
+            font-size: 1.125rem; /* استخدام rem */
+            padding: 0.5rem;
+            width: 2.5rem;
+            height: 2.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .nav-icons a:hover {
+            color: var(--primary-color);
+            background-color: rgba(76, 175, 80, 0.1);
+            transform: scale(1.1); /* تأثير أفضل */
+        }
+        
+        /* زر الإغلاق/العودة */
+        .btn-back {
+            background-color: transparent;
+            border: none;
+            color: var(--text-light);
+            font-size: 1.25rem; /* استخدام rem */
+            cursor: pointer;
+            transition: var(--transition);
+            width: 2.25rem;
+            height: 2.25rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 0.5rem;
+        }
+
+        .btn-back:hover {
+            background-color: rgba(0, 0, 0, 0.1);
+            color: var(--error-color);
+        }
+
+        .dark-mode .btn-back:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+
+        /* =========================================================================
+           4. المحتوى الرئيسي (Main Content)
+           ========================================================================= */
+
+        .main-content {
+            padding: 2.5rem 5% 4rem 5%; /* استخدام rem و % */
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .page-header {
+            margin-bottom: 2rem;
+            width: 100%;
+        }
+
+        .page-header h1 {
+            font-size: 2.25rem; /* استخدام rem */
+            margin-bottom: 0.75rem;
+            color: var(--primary-color);
+        }
+
+        .page-header h1::after {
+            bottom: -0.5rem;
+            height: 0.1875rem; /* استخدام rem */
+            width: 50%;
+        }
+
+        .page-description {
+            font-size: 1.125rem; /* استخدام rem */
+            color: var(--text-light);
+            max-width: 50rem; /* استخدام rem */
+            margin: 0 auto;
+        }
+
+        /* شريط الإحصائيات */
+        .stats-bar {
+            padding: 0.625rem 0; /* استخدام rem */
+            margin-bottom: 2rem;
+            border-radius: 0.5rem; /* استخدام rem */
+            max-width: 75rem; /* استخدام rem */
+            overflow: hidden;
+            box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.2);
+            width: 100%;
+            position: relative;
+        }
+
+        .stats-content {
+            display: inline-block;
+            white-space: nowrap;
+            animation: scrollText 20s linear infinite;
+            padding-right: 100%; /* ضمان التكرار السلس */
+            font-weight: 600;
+        }
+
+        .stats-content span {
+            margin: 0 1rem; /* استخدام rem */
+        }
+
+        /* تبويبات التصنيف */
+        .tabs-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2rem;
+            background-color: var(--secondary-color);
+            border-radius: 0.75rem; /* استخدام rem */
+            padding: 0.5rem;
+            box-shadow: var(--card-shadow);
+            max-width: 25rem; /* استخدام rem */
+            width: 100%;
+        }
+
+        .dark-mode .tabs-container {
+            background-color: #1e1e1e;
+        }
+
+        .tab {
+            padding: 0.75rem 1.25rem; /* استخدام rem */
+            border: none;
+            background: none;
+            font-size: 1rem; /* استخدام rem */
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            border-radius: 0.5rem; /* استخدام rem */
+            color: var(--text-light);
+            font-family: inherit;
+            flex: 1; /* لتوزيع الأزرار بالتساوي */
+        }
+
+        .tab.active {
+            background-color: var(--primary-color);
+            color: white;
+            box-shadow: 0 0.125rem 0.375rem rgba(76, 175, 80, 0.4);
+        }
+
+        /* حاوية الإصدارات (Grid System) */
+        .versions-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr)); /* استخدام rem و minmax مرن */
+            gap: 1.5rem; /* استخدام rem */
+            width: 100%;
+            max-width: 75rem; /* استخدام rem */
+        }
+
+        /* بطاقة الإصدار */
+        .version-card {
+            background-color: var(--secondary-color);
+            border-radius: 0.75rem; /* استخدام rem */
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
+            border: 1px solid rgba(76, 175, 80, 0.1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .version-card:hover {
+            transform: translateY(-0.5rem); /* استخدام rem */
+            box-shadow: 0 0.75rem 1.25rem rgba(76, 175, 80, 0.2);
+        }
+
+        .version-header {
+            background: linear-gradient(45deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            padding: 1rem; /* استخدام rem */
+            text-align: center;
+        }
+
+        .version-name {
+            font-size: 1.25rem; /* استخدام rem */
+            font-weight: 700;
+        }
+
+        .version-type {
+            font-size: 0.875rem; /* استخدام rem */
+            opacity: 0.9;
+        }
+
+        .version-content {
+            padding: 1.25rem; /* استخدام rem */
+            flex-grow: 1; /* لضمان تساوي ارتفاعات البطاقات */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .version-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.75rem; /* استخدام rem */
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .dark-mode .version-info {
+            border-bottom-color: #444;
+        }
+
+        .version-label {
+            font-weight: 600;
+        }
+
+        .version-actions {
+            display: flex;
+            gap: 0.625rem; /* استخدام rem */
+            margin-top: 0.75rem;
+        }
+
+        .btn {
+            padding: 0.625rem 1.25rem; /* استخدام rem */
+            border-radius: 0.5rem; /* استخدام rem */
+            font-size: 0.9rem; /* استخدام rem */
+            flex: 1;
+        }
+        
+        .btn i {
+            margin-left: 0.5rem;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .btn-outline.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        /* حالة لا توجد بيانات */
+        .empty-state {
+            padding: 3rem 1.25rem; /* استخدام rem */
+            grid-column: 1 / -1; /* يغطي جميع الأعمدة */
+        }
+
+        .empty-state i {
+            font-size: 4rem; /* استخدام rem */
+            margin-bottom: 1.25rem;
+        }
+
+        .hidden {
+            display: none;
+        }
+        
+        /* =========================================================================
+           5. التذييل (Footer)
+           ========================================================================= */
+
+        .footer {
+            padding: 1.5rem 5%; /* استخدام rem و % */
+            background-color: #1a1a1a;
+            color: #aaaaaa;
+            font-size: 0.875rem; /* استخدام rem */
+            border-top: 0.25rem solid var(--primary-color); /* استخدام rem */
+            margin-top: auto; /* يدفعه للأسفل */
+        }
+
+        .copyright-team {
+            font-size: 0.9375rem; /* استخدام rem */
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+        }
+        
+        /* =========================================================================
+           6. الاستجابة (Media Queries for Responsiveness)
+           ========================================================================= */
+
+        /* الشاشات المتوسطة (الأجهزة اللوحية) */
+        @media (max-width: 48em) { /* 768px / 16 = 48em */
+            .page-header h1 {
+                font-size: 2rem;
+            }
+            .page-description {
+                font-size: 1rem;
+            }
+            .versions-container {
+                grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); /* تصغير حجم البطاقة قليلاً */
+                gap: 1rem;
+            }
+            .tab {
+                padding: 0.625rem 1rem;
+                font-size: 0.9rem;
+            }
+            .nav-icons {
+                gap: 1rem;
+            }
+        }
+
+        /* الشاشات الصغيرة (الهواتف) */
+        @media (max-width: 36em) { /* 576px / 16 = 36em */
+            .navbar {
+                padding: 0.5rem 1rem;
+            }
+            .logo {
+                font-size: 1.5rem;
+            }
+            .main-content {
+                padding: 1.5rem 1rem 3rem 1rem;
+            }
+            .versions-container {
+                grid-template-columns: 1fr; /* عرض عمود واحد */
+                max-width: 25rem;
+            }
+            .tabs-container {
+                padding: 0.3rem;
+                max-width: 100%;
+            }
+            .tab {
+                padding: 0.5rem 0.75rem;
+                font-size: 0.85rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="animated-bg"></div>
+    <div class="progress-bar"></div>
+
+    <header class="navbar">
+        <a href="index.html" class="logo">
+            <i class="fas fa-cube"></i>
+            MatrixMuf
+        </a>
+        <nav>
+            <ul class="nav-icons">
+                <li><a href="profile.html" title="بروفايل"><i class="fas fa-user"></i></a></li>
+                <li><a href="#" id="dark-mode-toggle" title="وضع داكن"><i class="fas fa-moon"></i></a></li>
+                <li><a href="support.html" title="دعم فني"><i class="fas fa-headset"></i></a></li>
+                <li><button class="btn-back" id="back-button" title="رجوع"><i class="fas fa-arrow-right"></i></button></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="main-content">
+        <div class="page-header">
+            <h1>إصدارات ماين كرافت</h1>
+            <p class="page-description">قم بتحميل أحدث إصدارات ماين كرافت الرسمية والباتشات</p>
+        </div>
+
+        <div class="stats-bar">
+            <div class="stats-content">
+                <span>إجمالي الإصدارات: <span id="total-versions">0</span> إصدار</span> • 
+                <span>أحدث إصدار: <span id="latest-version-stat">--</span></span> • 
+                <span>إصدارات باتش: <span id="patch-count-stat">0</span></span> • 
+                <span>إصدارات رسمية: <span id="official-count-stat">0</span></span>
+            </div>
+        </div>
+
+        <div class="tabs-container">
+            <button class="tab active" data-filter="all">الكل</button>
+            <button class="tab" data-filter="official">الرسمية</button>
+            <button class="tab" data-filter="patch">باتش</button>
+        </div>
+
+        <div class="versions-container" id="versions-container">
+            </div>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; <span id="current-year"></span> MatrixMuf. جميع الحقوق محفوظة.</p>
+        <p class="copyright-team">تمت البرمجة بواسطة فريق MatrixMuf IRAQ</p>
+    </footer>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-analytics.js";
+        import { 
+            getDatabase, 
+            ref, 
+            get, 
+            child 
+        } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-database.js";
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDgqgIdXgZflmPT4z3IcaIzg6f7BxLEvyE",
+            authDomain: "matrixmodadd.firebaseapp.com",
+            databaseURL: "https://matrixmodadd-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "matrixmodadd",
+            storageBucket: "matrixmodadd.firebasestorage.app",
+            messagingSenderId: "67540662652",
+            appId: "1:67540662652:web:0c597e33134bccf89accf9",
+            measurementId: "G-QQ6FDGTSR5"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app); // تم إبقاء Analytics
+        const database = getDatabase(app);
+
+        // جعل المتغيرات متاحة عالمياً
+        window.firebaseDatabase = database;
+        window.firebaseRef = ref;
+        window.firebaseGet = get;
+        window.firebaseChild = child;
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // ===================================
+            // 1. تعريف العناصر والمتغيرات
+            // ===================================
+            const body = document.body;
+            const darkModeToggle = document.getElementById('dark-mode-toggle');
+            const progressBar = document.querySelector('.progress-bar');
+            const versionsContainer = document.getElementById('versions-container');
+            const tabs = document.querySelectorAll('.tab');
+            const totalVersionsElement = document.getElementById('total-versions');
+            const patchCountStat = document.getElementById('patch-count-stat');
+            const officialCountStat = document.getElementById('official-count-stat');
+            const latestVersionStat = document.getElementById('latest-version-stat');
+            const backButton = document.getElementById('back-button');
+            const currentYearElement = document.getElementById('current-year');
+            
+            // بيانات افتراضية في حال عدم وجود Firebase أو للتجربة
+            const defaultVersionsData = [
+                { id: 1, name: "ماين كرافت - إصدار 1.21.111", version: "1.21.111", type: "official", size: "145 MB", date: "2024-12-01", downloadUrl: "URL1" },
+                { id: 2, name: "ماين كرافت - إصدار 1.21.100", version: "1.21.100", type: "official", size: "142 MB", date: "2024-11-15", downloadUrl: "URL2" },
+                { id: 3, name: "ماين كرافت باتش - إصدار 1.21.70", version: "1.21.70", type: "patch", size: "15 MB", date: "2024-08-30", downloadUrl: "URL3" }
+                // ... أضف المزيد من البيانات هنا
+            ];
+            let currentVersions = [];
+            
+            // تعيين السنة الحالية في التذييل
+            currentYearElement.textContent = new Date().getFullYear();
+
+            // ===================================
+            // 2. دوال عرض البيانات
+            // ===================================
+
+            /**
+             * عرض حالة عدم وجود بيانات.
+             */
+            function displayEmptyState() {
+                versionsContainer.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-box-open"></i>
+                        <h3>لا توجد إصدارات</h3>
+                        <p>لم يتم العثور على أي إصدارات تطابق معايير البحث.</p>
+                    </div>
+                `;
+            }
+
+            /**
+             * تحديث إحصائيات الشريط المتحرك.
+             */
+            function updateStats() {
+                const officialCount = currentVersions.filter(v => v.type === 'official').length;
+                const patchCount = currentVersions.filter(v => v.type === 'patch').length;
+                
+                // البحث عن أحدث إصدار رسمي
+                const latestOfficial = currentVersions
+                    .filter(v => v.type === 'official')
+                    .sort((a, b) => new Date(b.date) - new Date(a.date))[0];
+
+                totalVersionsElement.textContent = officialCount + patchCount;
+                patchCountStat.textContent = patchCount;
+                officialCountStat.textContent = officialCount;
+                latestVersionStat.textContent = latestOfficial ? latestOfficial.version : '--';
+            }
+
+            /**
+             * عرض الإصدارات في الحاوية.
+             * @param {Array<Object>} versions - قائمة الإصدارات المراد عرضها.
+             */
+            function displayVersions(versions) {
+                versionsContainer.innerHTML = '';
+                
+                if (versions.length === 0) {
+                    displayEmptyState();
+                    return;
+                }
+                
+                versions.forEach((version) => {
+                    const versionCard = document.createElement('div');
+                    versionCard.className = 'version-card';
+                    versionCard.setAttribute('data-type', version.type);
+                    
+                    const versionTypeText = version.type === 'official' ? 'إصدار رسمي' : 'إصدار باتش';
+                    
+                    // تحقق من حالة المفضلة (افتراضياً: غير مفضل)
+                    const isFavorite = localStorage.getItem(`fav-${version.id}`) === 'true';
+                    const favoriteIconClass = isFavorite ? 'fas fa-heart' : 'far fa-heart';
+                    const favoriteBtnClass = isFavorite ? 'btn-outline active' : 'btn-outline';
+                    
+                    versionCard.innerHTML = `
+                        <div class="version-header">
+                            <div class="version-name">${version.name}</div>
+                            <div class="version-type">${versionTypeText}</div>
+                        </div>
+                        <div class="version-content">
+                            <div>
+                                <div class="version-info">
+                                    <span class="version-label">الإصدار:</span>
+                                    <span class="version-value">${version.version}</span>
+                                </div>
+                                <div class="version-info">
+                                    <span class="version-label">الحجم:</span>
+                                    <span class="version-value">${version.size}</span>
+                                </div>
+                                <div class="version-info">
+                                    <span class="version-label">تاريخ الإصدار:</span>
+                                    <span class="version-value">${version.date}</span>
+                                </div>
+                            </div>
+                            <div class="version-actions">
+                                <a href="${version.downloadUrl}" class="btn" target="_blank" rel="noopener noreferrer">
+                                    <i class="fas fa-download"></i> تحميل
+                                </a>
+                                <button class="btn favorite-btn ${favoriteBtnClass}" data-id="${version.id}" title="إضافة للمفضلة">
+                                    <i class="${favoriteIconClass}"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    
+                    versionsContainer.appendChild(versionCard);
+                });
+            }
+
+            /**
+             * تصفية وعرض الإصدارات بناءً على النوع.
+             * @param {string} type - نوع الإصدارات ('all', 'official', 'patch').
+             */
+            function filterVersions(type) {
+                const filteredVersions = type === 'all' 
+                    ? currentVersions 
+                    : currentVersions.filter(version => version.type === type);
+                
+                displayVersions(filteredVersions);
+            }
+
+            // ===================================
+            // 3. دوال العمليات (Toggle/Load)
+            // ===================================
+
+            /**
+             * إضافة/إزالة الإصدار من المفضلة مع تأثير بصري.
+             * @param {number} versionId - مُعرف الإصدار.
+             * @param {HTMLElement} buttonElement - زر المفضلة الذي تم النقر عليه.
+             */
+            function toggleFavorite(versionId, buttonElement) {
+                const version = currentVersions.find(v => v.id === versionId);
+                const isFavorite = localStorage.getItem(`fav-${versionId}`) === 'true';
+                
+                // تحديث حالة المفضلة في localStorage
+                const newFavoriteState = !isFavorite;
+                localStorage.setItem(`fav-${versionId}`, newFavoriteState);
+                
+                // تحديث الواجهة
+                const icon = buttonElement.querySelector('i');
+                if (newFavoriteState) {
+                    icon.classList.replace('far', 'fas');
+                    buttonElement.classList.add('active');
+                    alert(`تمت إضافة ${version.name} إلى المفضلة`);
+                } else {
+                    icon.classList.replace('fas', 'far');
+                    buttonElement.classList.remove('active');
+                    alert(`تمت إزالة ${version.name} من المفضلة`);
+                }
+            }
+            
+            /**
+             * محاكاة تحميل البيانات من Firebase أو استخدام الافتراضية.
+             */
+            function loadVersions() {
+                // نستخدم البيانات الافتراضية حالياً لتحسين تجربة المستخدم في الكود المعدل.
+                // في الكود الحقيقي، يجب هنا استخدام window.firebaseGet و window.firebaseChild
+                // لتحميل البيانات من قاعدة بيانات Firebase.
+                
+                currentVersions = defaultVersionsData.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+                displayVersions(currentVersions);
+                updateStats();
+            }
+
+            // ===================================
+            // 4. الأحداث والاستماع (Event Listeners)
+            // ===================================
+
+            // حدث زر الرجوع
+            backButton.addEventListener('click', () => {
+                history.back();
+            });
+
+            // أحداث التبويبات
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    filterVersions(tab.getAttribute('data-filter'));
+                });
+            });
+
+            // حدث زر المفضلة باستخدام التفويض (Delegation)
+            versionsContainer.addEventListener('click', (e) => {
+                const favoriteBtn = e.target.closest('.favorite-btn');
+                if (favoriteBtn) {
+                    const versionId = parseInt(favoriteBtn.getAttribute('data-id'));
+                    toggleFavorite(versionId, favoriteBtn);
+                }
+            });
+
+            // وضع الظلام
+            function initializeDarkMode() {
+                const currentTheme = localStorage.getItem('theme');
+                if (currentTheme === 'dark') {
+                    body.classList.add('dark-mode');
+                    darkModeToggle.querySelector('i').classList.replace('fa-moon', 'fa-sun');
+                }
+            }
+            
+            darkModeToggle.addEventListener('click', (e) => {
+                e.preventDefault();
+                body.classList.toggle('dark-mode');
+
+                const icon = darkModeToggle.querySelector('i');
+                if (body.classList.contains('dark-mode')) {
+                    icon.classList.replace('fa-moon', 'fa-sun');
+                    localStorage.setItem('theme', 'dark');
+                } else {
+                    icon.classList.replace('fa-sun', 'fa-moon');
+                    localStorage.setItem('theme', 'light');
+                }
+            });
+
+            // شريط التقدم للقراءة
+            window.addEventListener('scroll', () => {
+                const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+                const scrolled = window.scrollY;
+                const progress = (scrolled / scrollable) * 100;
+                progressBar.style.width = `${progress}%`;
+            });
+            
+            // ===================================
+            // 5. تهيئة الصفحة
+            // ===================================
+            initializeDarkMode();
+            loadVersions();
+        });
+    </script>
+</body>
+</html>
